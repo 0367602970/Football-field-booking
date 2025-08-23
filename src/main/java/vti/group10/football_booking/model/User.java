@@ -54,6 +54,9 @@ public class User {
 
     @OneToMany(mappedBy = "generatedBy")
     private List<Report> reports;
+
+    @Column(columnDefinition = "MEDIUMTEXT")
+    private String refreshToken;
     
     public enum Role {
         USER, ADMIN, OWNER

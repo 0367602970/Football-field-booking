@@ -7,5 +7,5 @@ import vti.group10.football_booking.model.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    
+    boolean existsByEmail(String email);
 }
