@@ -12,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -54,6 +55,9 @@ public class User {
 
     @OneToMany(mappedBy = "generatedBy")
     private List<Report> reports;
+
+    @Column(columnDefinition = "MEDIUMTEXT")
+    private String refreshToken;
     
     public enum Role {
         USER, ADMIN, OWNER
