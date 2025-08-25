@@ -15,7 +15,6 @@ import vti.group10.football_booking.dto.ApiResponse;
 import vti.group10.football_booking.dto.request.FieldRequest;
 import vti.group10.football_booking.dto.request.FieldUpdateRequest;
 import vti.group10.football_booking.dto.response.FieldResponse;
-import vti.group10.football_booking.model.FootballField;
 import vti.group10.football_booking.service.owner.FieldService;
 import org.springframework.web.bind.annotation.PutMapping;
 
