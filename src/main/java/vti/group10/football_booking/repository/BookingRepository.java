@@ -1,6 +1,7 @@
 package vti.group10.football_booking.repository;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -28,4 +29,9 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate
     );
+
+    //Lấy danh sách booking theo owner và trạng thái
+    @Query("SELECT b FROM Booking b WHERE b.field.owner.id = :ownerId AND b.status = :status")
+    List<Booking> findBookingsByOwnerAndStatus(@Param("ownerId") Long ownerId,
+                                               @Param("status") Booking.Status status);
 }
