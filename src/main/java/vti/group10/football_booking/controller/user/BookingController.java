@@ -24,36 +24,28 @@ public class BookingController {
             @RequestBody BookingRequest request
     ) {
         try {
-            // Lấy token từ header Authorization
             String token = authorizationHeader.replace("Bearer ", "").trim();
-
-            // Parse token để lấy claims
             Claims claims = jwtService.parseToken(token).getPayload();
 
-            // Lấy roles từ claims (do generate token là List)
             Object rolesObj = claims.get("roles");
-
             String role = null;
             if (rolesObj instanceof java.util.List) {
                 java.util.List<?> rolesList = (java.util.List<?>) rolesObj;
                 if (!rolesList.isEmpty()) {
-                    role = rolesList.get(0).toString(); // Lấy ROLE_USER hoặc ROLE_OWNER...
+                    role = rolesList.get(0).toString();
                 }
             } else if (rolesObj instanceof String) {
-                role = rolesObj.toString(); // fallback nếu chỉ lưu string
+                role = rolesObj.toString();
             }
 
-            // Chỉ cho phép role USER
             if (role == null || !role.equalsIgnoreCase("ROLE_USER")) {
                 return ResponseEntity
                         .status(HttpStatus.FORBIDDEN)
                         .body("Only accounts with role USER can book a field.");
             }
 
-            // Lấy userId từ subject
             Integer userId = Integer.valueOf(claims.getSubject());
 
-            // Gọi service tạo booking
             Booking booking = bookingService.createBooking(userId, request);
 
             return ResponseEntity.ok(booking);
@@ -62,6 +54,46 @@ public class BookingController {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Booking failed: " + e.getMessage());
+        }
+    }
+
+    // ✅ API huỷ booking
+    @PutMapping("/{bookingId}/cancel")
+    public ResponseEntity<?> cancelBooking(
+            @RequestHeader("Authorization") String authorizationHeader,
+            @PathVariable Integer bookingId
+    ) {
+        try {
+            String token = authorizationHeader.replace("Bearer ", "").trim();
+            Claims claims = jwtService.parseToken(token).getPayload();
+
+            Object rolesObj = claims.get("roles");
+            String role = null;
+            if (rolesObj instanceof java.util.List) {
+                java.util.List<?> rolesList = (java.util.List<?>) rolesObj;
+                if (!rolesList.isEmpty()) {
+                    role = rolesList.get(0).toString();
+                }
+            } else if (rolesObj instanceof String) {
+                role = rolesObj.toString();
+            }
+
+            if (role == null || !role.equalsIgnoreCase("ROLE_USER")) {
+                return ResponseEntity
+                        .status(HttpStatus.FORBIDDEN)
+                        .body("Only accounts with role USER can cancel a booking.");
+            }
+
+            Integer userId = Integer.valueOf(claims.getSubject());
+
+            Booking booking = bookingService.cancelBooking(userId, bookingId);
+
+            return ResponseEntity.ok(booking);
+
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Cancel booking failed: " + e.getMessage());
         }
     }
 }

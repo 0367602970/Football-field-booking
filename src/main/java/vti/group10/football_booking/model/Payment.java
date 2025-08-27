@@ -44,7 +44,7 @@ public class Payment {
     private Status status = Status.PENDING;
 
     public enum Method {
-        CASH, BANK, MOMO, ZALOPAY
+        BANK, MOMO, ZALOPAY
     }
 
     public enum Status {
