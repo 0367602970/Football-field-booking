@@ -15,11 +15,11 @@ public class BookingService {
         this.bookingRepo = bookingRepo;
     }
 
-    public List<Booking> getBookingsByOwnerAndStatus(Long ownerId, Booking.Status status) {
+    public List<Booking> getBookingsByOwnerAndStatus(int ownerId, Booking.Status status) {
         return bookingRepo.findBookingsByOwnerAndStatus(ownerId, status);
     }
 
-    public Booking updateBookingStatus(Long bookingId, Booking.Status status) {
+    public Booking updateBookingStatus(int bookingId, Booking.Status status) {
         Booking booking = bookingRepo.findById(bookingId)
                 .orElseThrow(() -> new RuntimeException("Booking not found"));
 

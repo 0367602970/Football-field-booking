@@ -14,7 +14,7 @@ import vti.group10.football_booking.repository.BookingRepository;
 public class RevenueService {
     private final BookingRepository bookingRepo;
 
-    public RevenueStatsResponse getRevenue(Long fieldId, String type) {
+    public RevenueStatsResponse getRevenue(int fieldId, String type) {
         LocalDate today = LocalDate.now();
         LocalDate start, end;
 
@@ -38,11 +38,11 @@ public class RevenueService {
         return buildStats(fieldId, start, end, type);
     }
 
-    public RevenueStatsResponse getRevenueByRange(Long fieldId, LocalDate start, LocalDate end) {
+    public RevenueStatsResponse getRevenueByRange(int fieldId, LocalDate start, LocalDate end) {
         return buildStats(fieldId, start, end, "custom");
     }
 
-    private RevenueStatsResponse buildStats(Long fieldId, LocalDate start, LocalDate end, String type) {
+    private RevenueStatsResponse buildStats(int fieldId, LocalDate start, LocalDate end, String type) {
         Double totalRevenue = bookingRepo.calculateRevenue(fieldId, start, end);
         Long totalBookings = bookingRepo.countBookings(fieldId, start, end);
 

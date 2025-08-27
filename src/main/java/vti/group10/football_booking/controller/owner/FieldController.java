@@ -18,7 +18,6 @@ import vti.group10.football_booking.dto.response.FieldResponse;
 import vti.group10.football_booking.service.owner.FieldService;
 import org.springframework.web.bind.annotation.PutMapping;
 
-
 @RestController
 @RequestMapping("/api/owner")
 @RequiredArgsConstructor
@@ -34,16 +33,16 @@ public class FieldController {
     }
 
     @PutMapping("fields/{id}")
-    public ResponseEntity<ApiResponse<FieldResponse>> updateField(@PathVariable long id, @RequestBody FieldUpdateRequest req, HttpServletRequest request) {
+    public ResponseEntity<ApiResponse<FieldResponse>> updateField(@PathVariable int id,
+            @RequestBody FieldUpdateRequest req, HttpServletRequest request) {
         FieldResponse updated = fieldService.updateField(id, req);
         return ResponseEntity.ok(
-                ApiResponse.ok(updated, "Field updated successfully", request.getRequestURI())
-        );
+                ApiResponse.ok(updated, "Field updated successfully", request.getRequestURI()));
     }
 
     @DeleteMapping("/fields/{id}")
     public ResponseEntity<ApiResponse<Object>> deleteField(
-            @PathVariable Long id, HttpServletRequest request) {
+            @PathVariable int id, HttpServletRequest request) {
         fieldService.deleteField(id);
         return ResponseEntity.ok(ApiResponse.ok(null, "Field deleted successfully", request.getRequestURI()));
     }

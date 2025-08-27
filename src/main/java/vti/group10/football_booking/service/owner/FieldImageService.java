@@ -20,7 +20,7 @@ import vti.group10.football_booking.repository.FootballFieldRepository;
 
 @Service
 @RequiredArgsConstructor
-public class FieldImageService  {
+public class FieldImageService {
 
     private final FootballFieldRepository fieldRepo;
     private final FieldImageRepository imageRepo;
@@ -28,7 +28,7 @@ public class FieldImageService  {
     @Value("${app.upload.dir:uploads}") // lấy từ application.properties, mặc định "uploads"
     private String uploadDir;
 
-    public FieldImage addImage(Long fieldId, MultipartFile file) throws IOException {
+    public FieldImage addImage(int fieldId, MultipartFile file) throws IOException {
         FootballField field = fieldRepo.findById(fieldId)
                 .orElseThrow(() -> new RuntimeException("Field not found"));
 
@@ -59,11 +59,11 @@ public class FieldImageService  {
         return fieldRepo.save(image);
     }
 
-    public List<FieldImage> getImages(Long fieldId) {
+    public List<FieldImage> getImages(int fieldId) {
         return imageRepo.findByFieldId(fieldId);
     }
 
-    public void deleteImage(Long imageId) {
+    public void deleteImage(int imageId) {
         imageRepo.deleteById(imageId);
     }
 }

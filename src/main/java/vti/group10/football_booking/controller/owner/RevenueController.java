@@ -20,42 +20,38 @@ import vti.group10.football_booking.service.owner.RevenueService;
 @RequestMapping("/api/owner/revenue")
 @RequiredArgsConstructor
 public class RevenueController {
-    private final RevenueService revenueService;
+        private final RevenueService revenueService;
 
-    @GetMapping("/{fieldId}")
-    public ResponseEntity<ApiResponse<RevenueStatsResponse>> getRevenue(
-            @PathVariable Long fieldId,
-            @RequestParam(defaultValue = "daily") String type,
-            HttpServletRequest request) {
+        @GetMapping("/{fieldId}")
+        public ResponseEntity<ApiResponse<RevenueStatsResponse>> getRevenue(
+                        @PathVariable int fieldId,
+                        @RequestParam(defaultValue = "daily") String type,
+                        HttpServletRequest request) {
 
-        RevenueStatsResponse stats = revenueService.getRevenue(fieldId, type);
+                RevenueStatsResponse stats = revenueService.getRevenue(fieldId, type);
 
-        return ResponseEntity.ok(
-                ApiResponse.ok(stats, "Revenue stats retrieved successfully", request.getRequestURI())
-        );
-    }
-
-    @GetMapping("/{fieldId}/range")
-    public ResponseEntity<ApiResponse<RevenueStatsResponse>> getRevenueByRange(
-            @PathVariable Long fieldId,
-            @RequestParam LocalDate startDate,
-            @RequestParam LocalDate endDate,
-            HttpServletRequest request) {
-
-        if (endDate.isBefore(startDate)) {
-            return ResponseEntity.badRequest().body(
-                    ApiResponse.error(
-                            HttpStatus.BAD_REQUEST.value(),
-                            "endDate must be after or equal to startDate",
-                            request.getRequestURI()
-                    )
-            );
+                return ResponseEntity.ok(
+                                ApiResponse.ok(stats, "Revenue stats retrieved successfully", request.getRequestURI()));
         }
 
-        RevenueStatsResponse stats = revenueService.getRevenueByRange(fieldId, startDate, endDate);
+        @GetMapping("/{fieldId}/range")
+        public ResponseEntity<ApiResponse<RevenueStatsResponse>> getRevenueByRange(
+                        @PathVariable int fieldId,
+                        @RequestParam LocalDate startDate,
+                        @RequestParam LocalDate endDate,
+                        HttpServletRequest request) {
 
-        return ResponseEntity.ok(
-                ApiResponse.ok(stats, "Revenue stats retrieved successfully", request.getRequestURI())
-        );
-    }
+                if (endDate.isBefore(startDate)) {
+                        return ResponseEntity.badRequest().body(
+                                        ApiResponse.error(
+                                                        HttpStatus.BAD_REQUEST.value(),
+                                                        "endDate must be after or equal to startDate",
+                                                        request.getRequestURI()));
+                }
+
+                RevenueStatsResponse stats = revenueService.getRevenueByRange(fieldId, startDate, endDate);
+
+                return ResponseEntity.ok(
+                                ApiResponse.ok(stats, "Revenue stats retrieved successfully", request.getRequestURI()));
+        }
 }

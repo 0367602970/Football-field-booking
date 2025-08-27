@@ -29,12 +29,14 @@ import lombok.NoArgsConstructor;
 public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
-    @ManyToOne @JoinColumn(name = "user_id")
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne @JoinColumn(name = "field_id")
+    @ManyToOne
+    @JoinColumn(name = "field_id")
     private FootballField field;
 
     @Column(name = "booking_date", nullable = false)

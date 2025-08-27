@@ -20,28 +20,24 @@ import vti.group10.football_booking.service.owner.BookingService;
 @RequestMapping("/api/owner/bookings")
 @RequiredArgsConstructor
 public class BookingController {
-    private final BookingService bookingService;
+        private final BookingService bookingService;
 
-    @GetMapping("/pending/{ownerId}")
-    public ResponseEntity<ApiResponse<List<Booking>>> getPendingBookings(
-            @PathVariable Long ownerId,
-            HttpServletRequest request
-    ) {
-        List<Booking> bookings = bookingService.getBookingsByOwnerAndStatus(ownerId, Booking.Status.PENDING);
-        return ResponseEntity.ok(
-                ApiResponse.ok(bookings, "Get bookings successful", request.getRequestURI())
-        );
-    }
+        @GetMapping("/pending/{ownerId}")
+        public ResponseEntity<ApiResponse<List<Booking>>> getPendingBookings(
+                        @PathVariable int ownerId,
+                        HttpServletRequest request) {
+                List<Booking> bookings = bookingService.getBookingsByOwnerAndStatus(ownerId, Booking.Status.PENDING);
+                return ResponseEntity.ok(
+                                ApiResponse.ok(bookings, "Get bookings successful", request.getRequestURI()));
+        }
 
-    @PutMapping("/{bookingId}/status")
-    public ResponseEntity<ApiResponse<Booking>> updateBookingStatus(
-            @PathVariable Long bookingId,
-            @RequestParam Booking.Status status,
-            HttpServletRequest request
-    ) {
-        Booking updated = bookingService.updateBookingStatus(bookingId, status);
-        return ResponseEntity.ok(
-                ApiResponse.ok(updated, "Booking status updated", request.getRequestURI())
-        );
-    }
+        @PutMapping("/{bookingId}/status")
+        public ResponseEntity<ApiResponse<Booking>> updateBookingStatus(
+                        @PathVariable int bookingId,
+                        @RequestParam Booking.Status status,
+                        HttpServletRequest request) {
+                Booking updated = bookingService.updateBookingStatus(bookingId, status);
+                return ResponseEntity.ok(
+                                ApiResponse.ok(updated, "Booking status updated", request.getRequestURI()));
+        }
 }
