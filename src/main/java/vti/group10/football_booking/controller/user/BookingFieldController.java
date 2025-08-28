@@ -63,4 +63,42 @@ public class BookingFieldController {
                     .body("Booking failed: " + e.getMessage());
         }
     }
+    @PutMapping("/{bookingId}/cancel")
+    public ResponseEntity<?> cancelBooking(
+            @RequestHeader("Authorization") String authorizationHeader,
+            @PathVariable Integer bookingId
+    ) {
+        try {
+            String token = authorizationHeader.replace("Bearer ", "").trim();
+            Claims claims = jwtService.parseToken(token).getPayload();
+
+            Object rolesObj = claims.get("roles");
+            String role = null;
+            if (rolesObj instanceof java.util.List) {
+                java.util.List<?> rolesList = (java.util.List<?>) rolesObj;
+                if (!rolesList.isEmpty()) {
+                    role = rolesList.get(0).toString();
+                }
+            } else if (rolesObj instanceof String) {
+                role = rolesObj.toString();
+            }
+
+            if (role == null || !role.equalsIgnoreCase("ROLE_USER")) {
+                return ResponseEntity
+                        .status(HttpStatus.FORBIDDEN)
+                        .body("Only accounts with role USER can cancel a booking.");
+            }
+
+            Integer userId = Integer.valueOf(claims.getSubject());
+
+            Booking booking = bookingService.cancelBooking(userId, bookingId);
+
+            return ResponseEntity.ok(booking);
+
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Cancel booking failed: " + e.getMessage());
+        }
+    }
 }

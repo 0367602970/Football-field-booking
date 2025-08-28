@@ -61,4 +61,27 @@ public class BookingFieldService {
 
         return bookingRepository.save(booking);
     }
+    // ✅ Hàm huỷ booking
+    @Transactional
+    public Booking cancelBooking(Integer userId, Integer bookingId) {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
+
+        // Chỉ user tạo booking mới được huỷ
+        if (!booking.getUser().getId().equals(userId)) {
+            throw new RuntimeException("You are not allowed to cancel this booking");
+        }
+
+        // Chỉ được hủy nếu booking chưa huỷ hoặc chưa hoàn thành
+        if (booking.getStatus() == Booking.Status.CANCELLED) {
+            throw new RuntimeException("Booking already cancelled");
+        }
+        if (booking.getStatus() == Booking.Status.COMPLETED) {
+            throw new RuntimeException("Completed booking cannot be cancelled");
+        }
+
+        booking.setStatus(Booking.Status.CANCELLED);
+
+        return bookingRepository.save(booking);
+    }
 }
