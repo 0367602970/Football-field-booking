@@ -63,4 +63,6 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
 
     // Lấy booking theo id
     Optional<Booking> findById(int bookingId);
+
+    
 }

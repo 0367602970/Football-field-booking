@@ -37,7 +37,7 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/api/auth/**").permitAll()
+                .requestMatchers("/", "/api/auth/**", "/api/payment/momo/ipn").permitAll()
                     .requestMatchers("/api/fields/search").permitAll()
                     .requestMatchers("/api/fields/**").permitAll()
                     .requestMatchers("/api/profile/update").authenticated()

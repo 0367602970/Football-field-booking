@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import vti.group10.football_booking.dto.ApiResponse;
+import vti.group10.football_booking.dto.BookingDTO;
 import vti.group10.football_booking.model.Booking;
 import vti.group10.football_booking.service.owner.BookingService;
 
@@ -23,12 +24,12 @@ public class BookingController {
         private final BookingService bookingService;
 
         @GetMapping("/pending/{ownerId}")
-        public ResponseEntity<ApiResponse<List<Booking>>> getPendingBookings(
-                        @PathVariable int ownerId,
-                        HttpServletRequest request) {
-                List<Booking> bookings = bookingService.getBookingsByOwnerAndStatus(ownerId, Booking.Status.PENDING);
-                return ResponseEntity.ok(
-                                ApiResponse.ok(bookings, "Get bookings successful", request.getRequestURI()));
+        public ResponseEntity<ApiResponse<List<BookingDTO>>> getPendingBookings(
+                @PathVariable int ownerId,
+                HttpServletRequest request) {
+        List<BookingDTO> bookings = bookingService.getBookingsByOwnerAndStatus(ownerId, Booking.Status.PENDING);
+        return ResponseEntity.ok(
+                ApiResponse.ok(bookings, "Get bookings successful", request.getRequestURI()));
         }
 
         @PutMapping("/{bookingId}/status")
