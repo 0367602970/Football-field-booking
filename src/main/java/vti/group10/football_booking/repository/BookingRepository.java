@@ -23,6 +23,16 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
             LocalTime startTime
     );
 
+    // Lấy danh sách booking theo user (có thể kèm status)
+    @Query("SELECT b FROM Booking b WHERE b.user.id = :userId ORDER BY b.createdAt DESC")
+    List<Booking> findBookingsByUser(@Param("userId") int userId);
+
+    // Phân trang
+    @Query("SELECT b FROM Booking b WHERE b.user.id = :userId ORDER BY b.createdAt DESC")
+    org.springframework.data.domain.Page<Booking> findBookingsByUser(
+            @Param("userId") int userId,
+            org.springframework.data.domain.Pageable pageable
+    );
 
     // Tính tổng doanh thu theo field trong khoảng ngày
     @Query("SELECT SUM(b.totalPrice) FROM Booking b " +
