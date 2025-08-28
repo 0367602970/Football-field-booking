@@ -41,6 +41,7 @@ public class SecurityConfig {
                     .requestMatchers("/api/fields/search").permitAll()
                     .requestMatchers("/api/fields/**").permitAll()
                     .requestMatchers("/api/profile/update").authenticated()
+                    .requestMatchers("/api/user/bookings/history").hasRole("USER")
                     .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter.class)
