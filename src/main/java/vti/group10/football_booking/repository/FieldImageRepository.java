@@ -9,5 +9,7 @@ import vti.group10.football_booking.model.FieldImage;
 
 @Repository
 public interface FieldImageRepository extends JpaRepository<FieldImage, Long> {
-    List<FieldImage> findByFieldId(Long fieldId);
+    List<FieldImage> findByFieldId(int fieldId);
+
+    void deleteById(int imageId);
 }

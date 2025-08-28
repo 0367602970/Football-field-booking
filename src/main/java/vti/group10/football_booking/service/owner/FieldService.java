@@ -65,14 +65,18 @@ public class FieldService {
                 .build();
     }
 
-    public FieldResponse updateField(Long id, FieldUpdateRequest req) {
+    public FieldResponse updateField(int id, FieldUpdateRequest req) {
         FootballField field = fieldRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Field not found"));
 
-        if (req.getName() != null) field.setName(req.getName());
-        if (req.getLocation() != null) field.setLocation(req.getLocation());
-        if (req.getDescription() != null) field.setDescription(req.getDescription());
-        if (req.getPricePerHour() != null) field.setPricePerHour(req.getPricePerHour());
+        if (req.getName() != null)
+            field.setName(req.getName());
+        if (req.getLocation() != null)
+            field.setLocation(req.getLocation());
+        if (req.getDescription() != null)
+            field.setDescription(req.getDescription());
+        if (req.getPricePerHour() != null)
+            field.setPricePerHour(req.getPricePerHour());
         if (req.getStatus() != null) {
             field.setStatus(FootballField.Status.valueOf(req.getStatus().toUpperCase()));
         }
@@ -81,7 +85,7 @@ public class FieldService {
         return toDto(updated);
     }
 
-    public void deleteField(Long id) {
+    public void deleteField(int id) {
         fieldRepo.deleteById(id);
     }
 }

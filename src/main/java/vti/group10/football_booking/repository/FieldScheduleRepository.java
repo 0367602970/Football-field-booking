@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import vti.group10.football_booking.model.FieldSchedule;
 
 @Repository
-public interface FieldScheduleRepository extends JpaRepository<FieldSchedule, Long> {
-    List<FieldSchedule> findByFieldId(Long fieldId);
+public interface FieldScheduleRepository extends JpaRepository<FieldSchedule, Integer> {
+    List<FieldSchedule> findByFieldId(int fieldId);
 }

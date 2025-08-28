@@ -19,7 +19,7 @@ public class FieldScheduleService {
     private final FieldScheduleRepository scheduleRepo;
 
     // Thêm lịch mới
-    public ScheduleResponse addSchedule(Long fieldId, ScheduleRequest req) {
+    public ScheduleResponse addSchedule(int fieldId, ScheduleRequest req) {
         FootballField field = fieldRepo.findById(fieldId)
                 .orElseThrow(() -> new RuntimeException("Field not found"));
 
@@ -35,26 +35,29 @@ public class FieldScheduleService {
     }
 
     // Sửa lịch
-    public ScheduleResponse updateSchedule(Long id, ScheduleRequest req) {
-        FieldSchedule schedule = scheduleRepo.findById(id)
+    public ScheduleResponse updateSchedule(int id, ScheduleRequest req) {
+        FieldSchedule schedule = scheduleRepo.findById( id)
                 .orElseThrow(() -> new RuntimeException("Schedule not found"));
 
-        if (req.getAvailableDate() != null) schedule.setAvailableDate(req.getAvailableDate());
-        if (req.getStartTime() != null) schedule.setStartTime(req.getStartTime());
-        if (req.getEndTime() != null) schedule.setEndTime(req.getEndTime());
+        if (req.getAvailableDate() != null)
+            schedule.setAvailableDate(req.getAvailableDate());
+        if (req.getStartTime() != null)
+            schedule.setStartTime(req.getStartTime());
+        if (req.getEndTime() != null)
+            schedule.setEndTime(req.getEndTime());
 
         return toDto(scheduleRepo.save(schedule));
     }
 
     // Xóa lịch
-    public void deleteSchedule(Long id) {
+    public void deleteSchedule(int id) {
         FieldSchedule schedule = scheduleRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Schedule not found"));
         scheduleRepo.delete(schedule);
     }
 
     // Lấy danh sách lịch của 1 sân
-    public List<ScheduleResponse> getSchedulesByField(Long fieldId) {
+    public List<ScheduleResponse> getSchedulesByField(int fieldId) {
         return scheduleRepo.findByFieldId(fieldId)
                 .stream()
                 .map(this::toDto)
