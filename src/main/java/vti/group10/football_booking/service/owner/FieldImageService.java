@@ -28,7 +28,7 @@ public class FieldImageService {
     @Value("${app.upload.dir:uploads}") // lấy từ application.properties, mặc định "uploads"
     private String uploadDir;
 
-    public FieldImage addImage(int fieldId, MultipartFile file) throws IOException {
+    public FieldImage addImage(Integer fieldId, MultipartFile file) throws IOException {
         FootballField field = fieldRepo.findById(fieldId)
                 .orElseThrow(() -> new RuntimeException("Field not found"));
 
@@ -59,11 +59,11 @@ public class FieldImageService {
         return fieldRepo.save(image);
     }
 
-    public List<FieldImage> getImages(int fieldId) {
+    public List<FieldImage> getImages(Integer fieldId) {
         return imageRepo.findByFieldId(fieldId);
     }
 
-    public void deleteImage(int imageId) {
+    public void deleteImage(Integer imageId) {
         imageRepo.deleteById(imageId);
     }
 }

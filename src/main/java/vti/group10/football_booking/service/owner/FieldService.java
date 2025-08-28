@@ -65,7 +65,7 @@ public class FieldService {
                 .build();
     }
 
-    public FieldResponse updateField(int id, FieldUpdateRequest req) {
+    public FieldResponse updateField(Integer id, FieldUpdateRequest req) {
         FootballField field = fieldRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Field not found"));
 
@@ -85,7 +85,7 @@ public class FieldService {
         return toDto(updated);
     }
 
-    public void deleteField(int id) {
+    public void deleteField(Integer id) {
         fieldRepo.deleteById(id);
     }
 }

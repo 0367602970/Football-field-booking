@@ -19,7 +19,7 @@ public class FieldScheduleService {
     private final FieldScheduleRepository scheduleRepo;
 
     // Thêm lịch mới
-    public ScheduleResponse addSchedule(int fieldId, ScheduleRequest req) {
+    public ScheduleResponse addSchedule(Integer fieldId, ScheduleRequest req) {
         FootballField field = fieldRepo.findById(fieldId)
                 .orElseThrow(() -> new RuntimeException("Field not found"));
 
@@ -35,7 +35,7 @@ public class FieldScheduleService {
     }
 
     // Sửa lịch
-    public ScheduleResponse updateSchedule(int id, ScheduleRequest req) {
+    public ScheduleResponse updateSchedule(Integer id, ScheduleRequest req) {
         FieldSchedule schedule = scheduleRepo.findById( id)
                 .orElseThrow(() -> new RuntimeException("Schedule not found"));
 
@@ -50,14 +50,14 @@ public class FieldScheduleService {
     }
 
     // Xóa lịch
-    public void deleteSchedule(int id) {
+    public void deleteSchedule(Integer id) {
         FieldSchedule schedule = scheduleRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Schedule not found"));
         scheduleRepo.delete(schedule);
     }
 
     // Lấy danh sách lịch của 1 sân
-    public List<ScheduleResponse> getSchedulesByField(int fieldId) {
+    public List<ScheduleResponse> getSchedulesByField(Integer fieldId) {
         return scheduleRepo.findByFieldId(fieldId)
                 .stream()
                 .map(this::toDto)

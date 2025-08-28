@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import vti.group10.football_booking.model.User;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, Integer> {
     boolean existsByEmail(String email);
 
     Optional<User> findById(Integer userId);

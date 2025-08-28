@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import vti.group10.football_booking.model.Notification;
 
 @Repository
-public interface NotificationRepository extends JpaRepository<Notification, Long> {
+public interface NotificationRepository extends JpaRepository<Notification, Integer> {
     
 }

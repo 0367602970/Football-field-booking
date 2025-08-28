@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 import vti.group10.football_booking.model.FieldImage;
 
 @Repository
-public interface FieldImageRepository extends JpaRepository<FieldImage, Long> {
-    List<FieldImage> findByFieldId(int fieldId);
+public interface FieldImageRepository extends JpaRepository<FieldImage, Integer> {
+    List<FieldImage> findByFieldId(Integer fieldId);
 
-    void deleteById(int imageId);
+    void deleteById(Integer imageId);
 }
