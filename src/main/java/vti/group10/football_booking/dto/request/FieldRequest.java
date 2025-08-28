@@ -8,18 +8,18 @@ import lombok.Data;
 
 @Data
 public class FieldRequest {
-    @NotBlank 
+    @NotBlank
     private String name;
 
-    @NotBlank 
+    @NotBlank
     private String location;
 
     private String description;
-    
-    @NotNull 
+
+    @NotNull
     private Double pricePerHour;
-    
-    private int typeId;
+
+    private Integer typeId;
 
     private List<String> images;
 }

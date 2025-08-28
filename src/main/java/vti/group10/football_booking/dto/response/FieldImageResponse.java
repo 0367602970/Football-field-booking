@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FieldImageResponse {
-    private int id;
+    private Integer id;
     private String imageUrl;
 }

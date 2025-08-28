@@ -29,7 +29,7 @@ public class FieldImageController {
         // Upload 1 ảnh
         @PostMapping("/{fieldId}/images")
         public ResponseEntity<ApiResponse<FieldImageResponse>> uploadImage(
-                        @PathVariable int fieldId,
+                        @PathVariable Integer fieldId,
                         @RequestParam("file") MultipartFile file,
                         HttpServletRequest request) throws IOException {
 
@@ -45,7 +45,7 @@ public class FieldImageController {
         // Lấy danh sách ảnh
         @GetMapping
         public ResponseEntity<ApiResponse<List<FieldImage>>> getImages(
-                        @PathVariable int fieldId,
+                        @PathVariable Integer fieldId,
                         HttpServletRequest request) {
 
                 List<FieldImage> images = fieldImageService.getImages(fieldId);
@@ -58,8 +58,8 @@ public class FieldImageController {
         // Xóa ảnh
         @DeleteMapping("/{imageId}")
         public ResponseEntity<ApiResponse<Void>> deleteImage(
-                        @PathVariable int fieldId,
-                        @PathVariable int imageId,
+                        @PathVariable Integer fieldId,
+                        @PathVariable Integer imageId,
                         HttpServletRequest request) {
 
                 fieldImageService.deleteImage(imageId);

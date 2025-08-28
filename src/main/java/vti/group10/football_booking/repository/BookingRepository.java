@@ -17,7 +17,7 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
                         "WHERE b.field.id = :fieldId AND b.status = 'CONFIRMED' " +
                         "AND b.bookingDate BETWEEN :startDate AND :endDate")
         Double calculateRevenue(
-                        @Param("fieldId") int fieldId,
+                        @Param("fieldId") Integer fieldId,
                         @Param("startDate") LocalDate startDate,
                         @Param("endDate") LocalDate endDate);
 
@@ -25,13 +25,13 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
                         "WHERE b.field.id = :fieldId AND b.status = 'CONFIRMED' " +
                         "AND b.bookingDate BETWEEN :startDate AND :endDate")
         Long countBookings(
-                        @Param("fieldId") int fieldId,
+                        @Param("fieldId") Integer fieldId,
                         @Param("startDate") LocalDate startDate,
                         @Param("endDate") LocalDate endDate);
 
         // Lấy danh sách booking theo owner và trạng thái
         @Query("SELECT b FROM Booking b WHERE b.field.owner.id = :ownerId AND b.status = :status")
-        List<Booking> findBookingsByOwnerAndStatus(@Param("ownerId") int ownerId,
+        List<Booking> findBookingsByOwnerAndStatus(@Param("ownerId") Integer ownerId,
                         @Param("status") Booking.Status status);
 
         Optional<Booking> findById(int bookingId);

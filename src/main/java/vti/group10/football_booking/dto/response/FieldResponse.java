@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 @Builder
 public class FieldResponse {
-    private int id;
+    private Integer id;
     private String name;
     private String location;
     private String description;

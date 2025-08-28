@@ -24,7 +24,7 @@ public class BookingController {
 
         @GetMapping("/pending/{ownerId}")
         public ResponseEntity<ApiResponse<List<Booking>>> getPendingBookings(
-                        @PathVariable int ownerId,
+                        @PathVariable Integer ownerId,
                         HttpServletRequest request) {
                 List<Booking> bookings = bookingService.getBookingsByOwnerAndStatus(ownerId, Booking.Status.PENDING);
                 return ResponseEntity.ok(
@@ -33,7 +33,7 @@ public class BookingController {
 
         @PutMapping("/{bookingId}/status")
         public ResponseEntity<ApiResponse<Booking>> updateBookingStatus(
-                        @PathVariable int bookingId,
+                        @PathVariable Integer bookingId,
                         @RequestParam Booking.Status status,
                         HttpServletRequest request) {
                 Booking updated = bookingService.updateBookingStatus(bookingId, status);

@@ -24,7 +24,7 @@ public class RevenueController {
 
         @GetMapping("/{fieldId}")
         public ResponseEntity<ApiResponse<RevenueStatsResponse>> getRevenue(
-                        @PathVariable int fieldId,
+                        @PathVariable Integer fieldId,
                         @RequestParam(defaultValue = "daily") String type,
                         HttpServletRequest request) {
 
@@ -36,7 +36,7 @@ public class RevenueController {
 
         @GetMapping("/{fieldId}/range")
         public ResponseEntity<ApiResponse<RevenueStatsResponse>> getRevenueByRange(
-                        @PathVariable int fieldId,
+                        @PathVariable Integer fieldId,
                         @RequestParam LocalDate startDate,
                         @RequestParam LocalDate endDate,
                         HttpServletRequest request) {

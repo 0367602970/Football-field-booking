@@ -12,12 +12,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ApiResponse<T> {
-    private String status;  // "success" | "error"
-    private int code;       // HTTP status code
-    private String message; 
-    private T data;         // dữ liệu trả về
-    private String path;    // endpoint
-    private Instant timestamp; 
+    private String status; // "success" | "error"
+    private Integer code; // HTTP status code
+    private String message;
+    private T data; // dữ liệu trả về
+    private String path; // endpoint
+    private Instant timestamp;
 
     public static <T> ApiResponse<T> ok(T data, String message, String path) {
         return ApiResponse.<T>builder()
@@ -41,7 +41,7 @@ public class ApiResponse<T> {
                 .build();
     }
 
-    //Hiển thị chi tiet lỗi validate
+    // Hiển thị chi tiet lỗi validate
     public static <T> ApiResponse<T> error(int code, String message, String path, T errors) {
         return ApiResponse.<T>builder()
                 .status("error")

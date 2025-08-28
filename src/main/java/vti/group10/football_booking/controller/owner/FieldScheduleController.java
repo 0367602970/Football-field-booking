@@ -27,7 +27,7 @@ public class FieldScheduleController {
 
         @PostMapping("/{fieldId}/schedules")
         public ResponseEntity<ApiResponse<ScheduleResponse>> addSchedule(
-                        @PathVariable int fieldId,
+                        @PathVariable Integer fieldId,
                         @RequestBody ScheduleRequest req,
                         HttpServletRequest request) {
 
@@ -38,8 +38,8 @@ public class FieldScheduleController {
 
         @PutMapping("/{fieldId}/schedules/{scheduleId}")
         public ResponseEntity<ApiResponse<ScheduleResponse>> updateSchedule(
-                        @PathVariable int fieldId,
-                        @PathVariable int scheduleId,
+                        @PathVariable Integer fieldId,
+                        @PathVariable Integer scheduleId,
                         @RequestBody ScheduleRequest req,
                         HttpServletRequest request) {
 
@@ -50,8 +50,8 @@ public class FieldScheduleController {
 
         @DeleteMapping("/{fieldId}/schedules/{scheduleId}")
         public ResponseEntity<ApiResponse<Void>> deleteSchedule(
-                        @PathVariable int fieldId,
-                        @PathVariable int scheduleId,
+                        @PathVariable Integer fieldId,
+                        @PathVariable Integer scheduleId,
                         HttpServletRequest request) {
 
                 scheduleService.deleteSchedule(scheduleId);
@@ -61,7 +61,7 @@ public class FieldScheduleController {
 
         @GetMapping("/{fieldId}/schedules")
         public ResponseEntity<ApiResponse<List<ScheduleResponse>>> getSchedules(
-                        @PathVariable int fieldId,
+                        @PathVariable Integer fieldId,
                         HttpServletRequest request) {
 
                 List<ScheduleResponse> schedules = scheduleService.getSchedulesByField(fieldId);

@@ -33,7 +33,7 @@ public class FieldController {
     }
 
     @PutMapping("fields/{id}")
-    public ResponseEntity<ApiResponse<FieldResponse>> updateField(@PathVariable int id,
+    public ResponseEntity<ApiResponse<FieldResponse>> updateField(@PathVariable Integer id,
             @RequestBody FieldUpdateRequest req, HttpServletRequest request) {
         FieldResponse updated = fieldService.updateField(id, req);
         return ResponseEntity.ok(
@@ -42,7 +42,7 @@ public class FieldController {
 
     @DeleteMapping("/fields/{id}")
     public ResponseEntity<ApiResponse<Object>> deleteField(
-            @PathVariable int id, HttpServletRequest request) {
+            @PathVariable Integer id, HttpServletRequest request) {
         fieldService.deleteField(id);
         return ResponseEntity.ok(ApiResponse.ok(null, "Field deleted successfully", request.getRequestURI()));
     }
