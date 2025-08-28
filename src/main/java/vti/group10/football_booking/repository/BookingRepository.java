@@ -15,6 +15,14 @@ import vti.group10.football_booking.model.Booking;
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Integer> {
 
+    List<Booking> findByField_IdAndBookingDateAndStatusAndStartTimeLessThanAndEndTimeGreaterThan(
+            Integer fieldId,
+            LocalDate bookingDate,
+            Booking.Status status,
+            LocalTime endTime,
+            LocalTime startTime
+    );
+
 
     // Tính tổng doanh thu theo field trong khoảng ngày
     @Query("SELECT SUM(b.totalPrice) FROM Booking b " +
