@@ -16,7 +16,6 @@ public class FootballFieldResponse {
     private String name;
     private String location;
     private Double pricePerHour;
-    private String description;
     private String status;
     private List<String> imageUrls; // chỉ trả về link ảnh
 }

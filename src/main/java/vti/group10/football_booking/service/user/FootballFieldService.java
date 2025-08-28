@@ -57,7 +57,6 @@ public class FootballFieldService {
                 .name(field.getName())
                 .location(field.getLocation())
                 .pricePerHour(field.getPricePerHour())
-                .description(field.getDescription())
                 .status(field.getStatus().name())
                 .imageUrls(field.getImages().stream()
                         .map(FieldImage::getImageUrl)
