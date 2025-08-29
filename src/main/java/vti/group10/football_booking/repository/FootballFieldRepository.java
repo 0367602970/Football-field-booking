@@ -20,13 +20,16 @@ public interface FootballFieldRepository extends JpaRepository<FootballField, In
 
     Optional<FootballField> findById(Integer fieldId);
 
-    //Tìm kiếm sân theo keyword (name hoặc location)
+    // Tìm kiếm sân theo keyword (name, address, district hoặc city)
     @Query("SELECT f FROM FootballField f " +
             "WHERE LOWER(f.name) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
-            "   OR LOWER(f.location) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+            "   OR LOWER(f.address) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+            "   OR LOWER(f.district) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+            "   OR LOWER(f.city) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     List<FootballField> searchFootballField(@Param("keyword") String keyword);
 
-    Page<FootballField> findByNameContainingIgnoreCaseOrLocationContainingIgnoreCase(
-            String name, String location, Pageable pageable);
+    // Tìm kiếm phân trang theo name hoặc address hoặc district hoặc city
+    Page<FootballField> findByNameContainingIgnoreCaseOrAddressContainingIgnoreCaseOrDistrictContainingIgnoreCaseOrCityContainingIgnoreCase(
+            String name, String address, String district, String city, Pageable pageable);
 
 }

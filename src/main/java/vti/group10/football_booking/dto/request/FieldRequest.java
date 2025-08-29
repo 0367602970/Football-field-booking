@@ -12,7 +12,13 @@ public class FieldRequest {
     private String name;
 
     @NotBlank 
-    private String location;
+    private String address;
+
+    @NotBlank
+    private String district;
+    
+    @NotBlank
+    private String city;
 
     private String description;
     

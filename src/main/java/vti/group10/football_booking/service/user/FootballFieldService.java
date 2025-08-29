@@ -32,7 +32,9 @@ public class FootballFieldService {
         return FootballFieldDetailResponse.builder()
                 .id(field.getId())
                 .name(field.getName())
-                .location(field.getLocation())
+                .address(field.getAddress())
+                .district(field.getDistrict())
+                .city(field.getCity())
                 .pricePerHour(field.getPricePerHour())
                 .description(field.getDescription())
                 .status(field.getStatus().name())
@@ -46,7 +48,7 @@ public class FootballFieldService {
 
     // 3. Tìm kiếm sân theo keyword (name hoặc location)
     public Page<FootballFieldResponse> searchFields(String keyword, Pageable pageable) {
-        return repository.findByNameContainingIgnoreCaseOrLocationContainingIgnoreCase(keyword, keyword, pageable)
+        return repository.findByNameContainingIgnoreCaseOrAddressContainingIgnoreCaseOrDistrictContainingIgnoreCaseOrCityContainingIgnoreCase(keyword, keyword, keyword, keyword, pageable)
                 .map(this::mapToResponse);
     }
 
@@ -55,7 +57,9 @@ public class FootballFieldService {
         return FootballFieldResponse.builder()
                 .id(field.getId())
                 .name(field.getName())
-                .location(field.getLocation())
+                .address(field.getAddress())
+                .district(field.getDistrict())
+                .city(field.getCity())
                 .pricePerHour(field.getPricePerHour())
                 .status(field.getStatus().name())
                 .imageUrls(field.getImages().stream()

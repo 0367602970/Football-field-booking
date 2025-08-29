@@ -10,7 +10,9 @@ import lombok.Data;
 public class FieldResponse {
     private int id;
     private String name;
-    private String location;
+    private String address;
+    private String district;
+    private String city;
     private String description;
     private Double pricePerHour;
     private String status;

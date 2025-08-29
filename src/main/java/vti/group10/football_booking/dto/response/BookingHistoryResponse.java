@@ -8,7 +8,9 @@ import java.time.LocalTime;
 public class BookingHistoryResponse {
     private Integer bookingId;
     private String fieldName;
-    private String location;
+    private String address;
+    private String district;
+    private String city;
     private LocalDate bookingDate;
     private LocalTime startTime;
     private LocalTime endTime;

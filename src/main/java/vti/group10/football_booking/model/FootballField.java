@@ -35,7 +35,14 @@ public class FootballField {
 
     private String name;
 
-    private String location;
+    @Column(nullable = false)
+    private String address;
+
+    @Column(nullable = false)
+    private String district;
+
+    @Column(nullable = false)
+    private String city;
 
     @Column(name = "price_per_hour")
     private Double pricePerHour;

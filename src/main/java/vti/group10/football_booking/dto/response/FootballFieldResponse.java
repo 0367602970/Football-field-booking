@@ -14,7 +14,9 @@ import java.util.List;
 public class FootballFieldResponse {
     private Integer id;
     private String name;
-    private String location;
+    private String address;
+    private String district;
+    private String city;
     private Double pricePerHour;
     private String status;
     private List<String> imageUrls; // chỉ trả về link ảnh

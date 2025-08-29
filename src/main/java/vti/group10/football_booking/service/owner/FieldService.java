@@ -22,7 +22,9 @@ public class FieldService {
     public FieldResponse createField(FieldRequest req) {
         FootballField field = FootballField.builder()
                 .name(req.getName())
-                .location(req.getLocation())
+                .address(req.getAddress())
+                .district(req.getDistrict())
+                .city(req.getCity())
                 .description(req.getDescription())
                 .pricePerHour(req.getPricePerHour())
                 .status(FootballField.Status.AVAILABLE)
@@ -40,22 +42,16 @@ public class FieldService {
         }
         fieldRepo.save(field);
 
-        return FieldResponse.builder()
-                .id(field.getId())
-                .name(field.getName())
-                .location(field.getLocation())
-                .description(field.getDescription())
-                .pricePerHour(field.getPricePerHour())
-                .status(field.getStatus().name())
-                .images(field.getImages().stream().map(FieldImage::getImageUrl).toList())
-                .build();
+        return toDto(field);
     }
 
     private FieldResponse toDto(FootballField field) {
         return FieldResponse.builder()
                 .id(field.getId())
                 .name(field.getName())
-                .location(field.getLocation())
+                .address(field.getAddress())
+                .district(field.getDistrict())
+                .city(field.getCity())
                 .description(field.getDescription())
                 .pricePerHour(field.getPricePerHour())
                 .status(field.getStatus().name())
@@ -71,8 +67,12 @@ public class FieldService {
 
         if (req.getName() != null)
             field.setName(req.getName());
-        if (req.getLocation() != null)
-            field.setLocation(req.getLocation());
+        if (req.getAddress() != null)
+            field.setAddress(req.getAddress());
+        if (req.getDistrict() != null)
+            field.setDistrict(req.getDistrict());
+        if (req.getCity() != null)
+            field.setCity(req.getCity());
         if (req.getDescription() != null)
             field.setDescription(req.getDescription());
         if (req.getPricePerHour() != null)

@@ -5,7 +5,9 @@ import lombok.Data;
 @Data
 public class FieldUpdateRequest {
     private String name;
-    private String location;
+    private String address;
+    private String district;
+    private String city;
     private String description;
     private Double pricePerHour;
     private String status;

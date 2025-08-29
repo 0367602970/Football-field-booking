@@ -33,7 +33,9 @@ public class BookingHistoryService {
             BookingHistoryResponse dto = new BookingHistoryResponse();
             dto.setBookingId(b.getId());
             dto.setFieldName(b.getField().getName());
-            dto.setLocation(b.getField().getLocation());
+            dto.setAddress(b.getField().getAddress());
+            dto.setDistrict(b.getField().getDistrict());
+            dto.setCity(b.getField().getCity());
             dto.setBookingDate(b.getBookingDate());
             dto.setStartTime(b.getStartTime());
             dto.setEndTime(b.getEndTime());
