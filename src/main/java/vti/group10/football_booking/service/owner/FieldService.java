@@ -1,7 +1,12 @@
 package vti.group10.football_booking.service.owner;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import vti.group10.football_booking.dto.request.FieldRequest;
@@ -18,6 +23,34 @@ public class FieldService {
     public FieldService(FootballFieldRepository fieldRepo) {
         this.fieldRepo = fieldRepo;
     }
+
+    public Page<FieldResponse> getAllFields(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<FootballField> fields = fieldRepo.findAll(pageable);
+        return fields.map(this::toDto);
+    }
+
+    public FieldResponse getFieldById(Integer id) {
+        FootballField field = fieldRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Field not found"));
+
+        return FieldResponse.builder()
+                .id(field.getId())
+                .name(field.getName())
+                .address(field.getAddress())
+                .district(field.getDistrict())
+                .city(field.getCity())
+                .description(field.getDescription())
+                .pricePerHour(field.getPricePerHour())
+                .status(field.getStatus().name())
+                .images(field.getImages() != null
+                        ? field.getImages().stream()
+                            .map(FieldImage::getImageUrl) // giả sử entity FieldImage có field url
+                            .toList()
+                        : List.of())
+                .build();
+    }
+
 
     public FieldResponse createField(FieldRequest req) {
         FootballField field = FootballField.builder()

@@ -18,6 +18,30 @@ public class BookingService {
         this.bookingRepo = bookingRepo;
     }
 
+    public List<BookingDTO> getAllBookingsByOwner(Integer ownerId) {
+        List<Booking> bookings = bookingRepo.findBookingsByOwner(ownerId);
+
+        return bookings.stream().map(b -> {
+            User u = b.getUser();
+            UserDTO userDTO = new UserDTO(
+                    u.getId(),
+                    u.getEmail(),
+                    u.getFullName(),
+                    u.getPhone(),
+                    u.getRole().name()
+            );
+            return new BookingDTO(
+                    b.getId(),
+                    userDTO,
+                    b.getBookingDate(),
+                    b.getStartTime(),
+                    b.getEndTime(),
+                    b.getTotalPrice(),
+                    b.getStatus()
+            );
+        }).toList();
+    }
+
     public List<BookingDTO> getBookingsByOwnerAndStatus(Integer ownerId, Booking.Status status) {
         List<Booking> bookings = bookingRepo.findBookingsByOwnerAndStatus(ownerId, status);
 
@@ -48,5 +72,11 @@ public class BookingService {
 
         booking.setStatus(status);
         return bookingRepo.save(booking);
+    }
+
+    public void deleteBooking(Integer bookingId) {
+        Booking booking = bookingRepo.findById(bookingId)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
+        bookingRepo.delete(booking);
     }
 }

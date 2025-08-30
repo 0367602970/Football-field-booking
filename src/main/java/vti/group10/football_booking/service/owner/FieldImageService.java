@@ -25,7 +25,7 @@ public class FieldImageService {
     private final FootballFieldRepository fieldRepo;
     private final FieldImageRepository imageRepo;
 
-    @Value("${app.upload.dir:uploads}") // lấy từ application.properties, mặc định "uploads"
+    @Value("${app.upload.dir:uploads}")
     private String uploadDir;
 
     public FieldImage addImage(Integer fieldId, MultipartFile file) throws IOException {

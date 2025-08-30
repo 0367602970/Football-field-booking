@@ -1,5 +1,6 @@
 package vti.group10.football_booking.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,4 +11,7 @@ import vti.group10.football_booking.model.FieldSchedule;
 @Repository
 public interface FieldScheduleRepository extends JpaRepository<FieldSchedule, Integer> {
     List<FieldSchedule> findByFieldId(Integer fieldId);
+
+    List<FieldSchedule> findByFieldIdAndAvailableDateAndIsBookedTrue(Integer fieldId, LocalDate availableDate);
 }
+

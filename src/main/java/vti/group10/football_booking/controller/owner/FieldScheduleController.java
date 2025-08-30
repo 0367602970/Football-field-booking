@@ -1,7 +1,9 @@
 package vti.group10.football_booking.controller.owner;
 
+import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -67,6 +70,19 @@ public class FieldScheduleController {
                 List<ScheduleResponse> schedules = scheduleService.getSchedulesByField(fieldId);
                 return ResponseEntity.ok(
                                 ApiResponse.ok(schedules, "Schedules retrieved successfully", request.getRequestURI()));
+        }
+
+        //Lấy danh sách lịch đã đặt của 1 sân theo ngày
+        //Truyền vào fieldId và date (yyyy-MM-dd)
+        @GetMapping("/{fieldId}/schedules/booked")
+        public ResponseEntity<ApiResponse<List<ScheduleResponse>>> getBookedSchedulesByDate(
+                @PathVariable int fieldId,
+                @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+                HttpServletRequest request) {
+
+                List<ScheduleResponse> schedules = scheduleService.getBookedSchedulesByDate(fieldId, date);
+                return ResponseEntity.ok(
+                        ApiResponse.ok(schedules, "Booked schedules retrieved successfully", request.getRequestURI()));
         }
 
 }

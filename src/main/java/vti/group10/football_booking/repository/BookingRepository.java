@@ -64,5 +64,8 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
     // Lấy booking theo id
     Optional<Booking> findById(int bookingId);
 
+        // Lấy danh sách booking theo owner
+        @Query("SELECT b FROM Booking b WHERE b.field.owner.id = :ownerId")
+        List<Booking> findBookingsByOwner(@Param("ownerId") int ownerId);
     
 }

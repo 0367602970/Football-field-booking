@@ -1,5 +1,6 @@
 package vti.group10.football_booking.service.owner;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -59,6 +60,13 @@ public class FieldScheduleService {
     // Lấy danh sách lịch của 1 sân
     public List<ScheduleResponse> getSchedulesByField(Integer fieldId) {
         return scheduleRepo.findByFieldId(fieldId)
+                .stream()
+                .map(this::toDto)
+                .toList();
+    }
+
+    public List<ScheduleResponse> getBookedSchedulesByDate(Integer fieldId, LocalDate date) {
+        return scheduleRepo.findByFieldIdAndAvailableDateAndIsBookedTrue(fieldId, date)
                 .stream()
                 .map(this::toDto)
                 .toList();
