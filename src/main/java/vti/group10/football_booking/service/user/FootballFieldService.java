@@ -9,7 +9,7 @@ import vti.group10.football_booking.model.FieldImage;
 import vti.group10.football_booking.dto.response.FootballFieldDetailResponse;
 import vti.group10.football_booking.repository.FootballFieldRepository;
 import lombok.RequiredArgsConstructor;
-
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,18 +39,23 @@ public class FootballFieldService {
                 .description(field.getDescription())
                 .status(field.getStatus().name())
                 .ownerName(field.getOwner().getFullName())
-                .imageUrls(field.getImages().stream()
-                        .limit(8) // chỉ lấy tối đa 8 ảnh
-                        .map(FieldImage::getImageUrl)
-                        .collect(Collectors.toList()))
+                .imageUrls(limitImages(field.getImages(), 8))
                 .build();
     }
 
     // 3. Tìm kiếm sân theo keyword (name hoặc location)
     public Page<FootballFieldResponse> searchFields(String keyword, Pageable pageable) {
-        return repository.findByNameContainingIgnoreCaseOrAddressContainingIgnoreCaseOrDistrictContainingIgnoreCaseOrCityContainingIgnoreCase(keyword, keyword, keyword, keyword, pageable)
+        return repository.findByNameContainingIgnoreCaseOrAddressContainingIgnoreCaseOrDistrictContainingIgnoreCaseOrCityContainingIgnoreCase(
+                        keyword, keyword, keyword, keyword, pageable)
                 .map(this::mapToResponse);
     }
+
+    // 4. Lọc sân theo city, district, pricePerHour (có phân trang)
+    public Page<FootballFieldResponse> filterFields(String city, String district, Double pricePerHour, Pageable pageable) {
+        return repository.filterFootballFields(city, district, pricePerHour, pageable)
+                .map(this::mapToResponse);
+    }
+
 
     // Hàm map sang DTO response
     private FootballFieldResponse mapToResponse(FootballField field) {
@@ -66,5 +71,13 @@ public class FootballFieldService {
                         .map(FieldImage::getImageUrl)
                         .collect(Collectors.toList()))
                 .build();
+    }
+
+    // helper: giới hạn số ảnh tối đa
+    private List<String> limitImages(List<FieldImage> images, int limit) {
+        return images.stream()
+                .limit(limit)
+                .map(FieldImage::getImageUrl)
+                .collect(Collectors.toList());
     }
 }

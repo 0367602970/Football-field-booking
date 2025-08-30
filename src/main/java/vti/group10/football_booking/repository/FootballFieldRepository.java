@@ -32,4 +32,14 @@ public interface FootballFieldRepository extends JpaRepository<FootballField, In
     Page<FootballField> findByNameContainingIgnoreCaseOrAddressContainingIgnoreCaseOrDistrictContainingIgnoreCaseOrCityContainingIgnoreCase(
             String name, String address, String district, String city, Pageable pageable);
 
+    @Query("SELECT f FROM FootballField f " +
+            "WHERE (:city IS NULL OR LOWER(f.city) = LOWER(:city)) " +
+            "AND (:district IS NULL OR LOWER(f.district) = LOWER(:district)) " +
+            "AND (:pricePerHour IS NULL OR f.pricePerHour <= :pricePerHour)")
+    Page<FootballField> filterFootballFields(
+            @Param("city") String city,
+            @Param("district") String district,
+            @Param("pricePerHour") Double pricePerHour,
+            Pageable pageable);
+
 }

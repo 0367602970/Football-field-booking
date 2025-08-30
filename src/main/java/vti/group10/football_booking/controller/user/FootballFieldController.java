@@ -25,13 +25,13 @@ public class FootballFieldController {
         return service.getAllFields(pageable);
     }
 
-    // 2. Lấy chi tiết sân theo id
+    // 2. Lấy chi tiết sân theo id (hiển thị tối đa 8 ảnh)
     @GetMapping("/{id}")
     public FootballFieldDetailResponse getFieldDetail(@PathVariable Integer id) {
         return service.getFieldById(id);
     }
 
-    // 3. Tìm kiếm sân theo từ khóa (name hoặc location)
+    // 3. Tìm kiếm sân theo từ khóa (name, address, district, city)
     @GetMapping("/search")
     public Page<FootballFieldResponse> searchFields(
             @RequestParam String keyword,
@@ -39,5 +39,19 @@ public class FootballFieldController {
             @RequestParam(defaultValue = "20") int size) {
         Pageable pageable = PageRequest.of(page, size);
         return service.searchFields(keyword, pageable);
+    }
+    // 4. Lọc theo city, district, pricePerHour (giá tối đa) – MỖI TRANG 20 SÂN
+    @GetMapping("/filter")
+    public Page<FootballFieldResponse> filterFields(
+            @RequestParam(required = false) String city,
+            @RequestParam(required = false) String district,
+            @RequestParam(required = false) Double pricePerHour,
+            @RequestParam(defaultValue = "0") int page
+    ) {
+        city = (city != null && city.trim().isEmpty()) ? null : city;
+        district = (district != null && district.trim().isEmpty()) ? null : district;
+
+        Pageable pageable = PageRequest.of(page, 20);
+        return service.filterFields(city, district, pricePerHour, pageable);
     }
 }

@@ -24,49 +24,49 @@ import vti.group10.football_booking.service.owner.FieldImageService;
 @RequestMapping("/api/owner/fields")
 @RequiredArgsConstructor
 public class FieldImageController {
-        private final FieldImageService fieldImageService;
+    private final FieldImageService fieldImageService;
 
-        // Upload 1 ảnh
-        @PostMapping("/{fieldId}/images")
-        public ResponseEntity<ApiResponse<FieldImageResponse>> uploadImage(
-                        @PathVariable int fieldId,
-                        @RequestParam("file") MultipartFile file,
-                        HttpServletRequest request) throws IOException {
+    // Upload 1 ảnh
+    @PostMapping("/{fieldId}/images")
+    public ResponseEntity<ApiResponse<FieldImageResponse>> uploadImage(
+            @PathVariable int fieldId,
+            @RequestParam("file") MultipartFile file,
+            HttpServletRequest request) throws IOException {
 
-                FieldImage img = fieldImageService.addImage(fieldId, file);
+        FieldImage img = fieldImageService.addImage(fieldId, file);
 
-                FieldImageResponse response = new FieldImageResponse(img.getId(), img.getImageUrl());
-                return ResponseEntity.ok(ApiResponse.ok(
-                                response,
-                                "Image uploaded successfully",
-                                request.getRequestURI()));
-        }
+        FieldImageResponse response = new FieldImageResponse(img.getId(), img.getImageUrl());
+        return ResponseEntity.ok(ApiResponse.ok(
+                response,
+                "Image uploaded successfully",
+                request.getRequestURI()));
+    }
 
-        // Lấy danh sách ảnh
-        @GetMapping
-        public ResponseEntity<ApiResponse<List<FieldImage>>> getImages(
-                        @PathVariable int fieldId,
-                        HttpServletRequest request) {
+    // Lấy danh sách ảnh
+    @GetMapping("/{fieldId}/images")
+    public ResponseEntity<ApiResponse<List<FieldImage>>> getImages(
+            @PathVariable int fieldId,
+            HttpServletRequest request) {
 
-                List<FieldImage> images = fieldImageService.getImages(fieldId);
-                return ResponseEntity.ok(ApiResponse.ok(
-                                images,
-                                "Images retrieved successfully",
-                                request.getRequestURI()));
-        }
+        List<FieldImage> images = fieldImageService.getImages(fieldId);
+        return ResponseEntity.ok(ApiResponse.ok(
+                images,
+                "Images retrieved successfully",
+                request.getRequestURI()));
+    }
 
-        // Xóa ảnh
-        @DeleteMapping("/{imageId}")
-        public ResponseEntity<ApiResponse<Void>> deleteImage(
-                        @PathVariable int fieldId,
-                        @PathVariable int imageId,
-                        HttpServletRequest request) {
+    // Xóa ảnh
+    @DeleteMapping("/{fieldId}/images/{imageId}")
+    public ResponseEntity<ApiResponse<Void>> deleteImage(
+            @PathVariable int fieldId,
+            @PathVariable int imageId,
+            HttpServletRequest request) {
 
-                fieldImageService.deleteImage(imageId);
+        fieldImageService.deleteImage(imageId);
 
-                return ResponseEntity.ok(ApiResponse.ok(
-                                null,
-                                "Image deleted successfully",
-                                request.getRequestURI()));
-        }
+        return ResponseEntity.ok(ApiResponse.ok(
+                null,
+                "Image deleted successfully",
+                request.getRequestURI()));
+    }
 }

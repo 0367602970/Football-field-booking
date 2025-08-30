@@ -6,6 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vti.group10.football_booking.dto.request.UpdateProfileRequest;
+import vti.group10.football_booking.dto.response.ProfileResponse;
 import vti.group10.football_booking.model.User;
 import vti.group10.football_booking.repository.UserRepository;
 
@@ -16,9 +17,12 @@ public class ProfileService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    /**
+     * Cập nhật thông tin cá nhân
+     */
     @Transactional
-    public User updateProfile(UpdateProfileRequest request) {
-        // Lấy thông tin user đang đăng nhập từ SecurityContext
+    public ProfileResponse updateProfile(UpdateProfileRequest request) {
+        // Lấy email user hiện tại từ SecurityContext
         String currentEmail = SecurityContextHolder.getContext().getAuthentication().getName();
 
         User user = userRepository.findByEmail(currentEmail)
@@ -26,10 +30,9 @@ public class ProfileService {
 
         // Cập nhật thông tin cơ bản
         if (request.getFullName() != null) user.setFullName(request.getFullName());
-        if (request.getEmail() != null) user.setEmail(request.getEmail());
         if (request.getPhone() != null) user.setPhone(request.getPhone());
 
-        // Xử lý đổi mật khẩu (nếu có truyền vào)
+        // Xử lý đổi mật khẩu
         if (request.getOldPassword() != null && request.getNewPassword() != null) {
             if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
                 throw new RuntimeException("Mật khẩu cũ không đúng");
@@ -37,6 +40,34 @@ public class ProfileService {
             user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         }
 
-        return userRepository.save(user);
+        // Lưu thay đổi
+        userRepository.save(user);
+
+        // Trả về DTO response (không chứa password)
+        return toProfileResponse(user);
+    }
+
+    /**
+     * Hiển thị thông tin cá nhân
+     */
+    @Transactional(readOnly = true)
+    public ProfileResponse getProfile() {
+        String currentEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User user = userRepository.findByEmail(currentEmail)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return toProfileResponse(user);
+    }
+
+    /**
+     * Mapper User -> ProfileResponse
+     */
+    private ProfileResponse toProfileResponse(User user) {
+        return ProfileResponse.builder()
+                .fullName(user.getFullName())
+                .email(user.getEmail())
+                .phone(user.getPhone())
+                .build();
     }
 }
