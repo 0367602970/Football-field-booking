@@ -50,9 +50,12 @@ public class FootballFieldService {
                 .map(this::mapToResponse);
     }
 
-    // 4. Lọc sân theo city, district, pricePerHour (có phân trang)
-    public Page<FootballFieldResponse> filterFields(String city, String district, Double pricePerHour, Pageable pageable) {
-        return repository.filterFootballFields(city, district, pricePerHour, pageable)
+    // 4. Lọc sân theo city, district, priceRange (có phân trang)
+    public Page<FootballFieldResponse> filterFields(String city, String district,
+                                                    Double minPrice, Double maxPrice,
+                                                    Pageable pageable) {
+        // City/District có thể truyền null — repository xử lý
+        return repository.filterFootballFields(city, district, minPrice, maxPrice, pageable)
                 .map(this::mapToResponse);
     }
 

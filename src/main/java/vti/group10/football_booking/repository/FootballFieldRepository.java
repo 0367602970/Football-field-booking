@@ -32,14 +32,17 @@ public interface FootballFieldRepository extends JpaRepository<FootballField, In
     Page<FootballField> findByNameContainingIgnoreCaseOrAddressContainingIgnoreCaseOrDistrictContainingIgnoreCaseOrCityContainingIgnoreCase(
             String name, String address, String district, String city, Pageable pageable);
 
+    // Lọc với city/district (LIKE case-insensitive) và khoảng giá (min/max)
     @Query("SELECT f FROM FootballField f " +
-            "WHERE (:city IS NULL OR LOWER(f.city) = LOWER(:city)) " +
-            "AND (:district IS NULL OR LOWER(f.district) = LOWER(:district)) " +
-            "AND (:pricePerHour IS NULL OR f.pricePerHour <= :pricePerHour)")
+            "WHERE (:city IS NULL OR LOWER(f.city) LIKE LOWER(CONCAT('%', :city, '%'))) " +
+            "AND (:district IS NULL OR LOWER(f.district) LIKE LOWER(CONCAT('%', :district, '%'))) " +
+            "AND (:minPrice IS NULL OR f.pricePerHour >= :minPrice) " +
+            "AND (:maxPrice IS NULL OR f.pricePerHour <= :maxPrice)")
     Page<FootballField> filterFootballFields(
             @Param("city") String city,
             @Param("district") String district,
-            @Param("pricePerHour") Double pricePerHour,
+            @Param("minPrice") Double minPrice,
+            @Param("maxPrice") Double maxPrice,
             Pageable pageable);
 
 }
