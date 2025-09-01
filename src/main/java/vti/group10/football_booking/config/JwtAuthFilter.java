@@ -11,6 +11,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import vti.group10.football_booking.service.JwtService;
@@ -27,9 +28,19 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException {
+        String token = null;
+
+        // 1. Lấy từ header
         String header = request.getHeader("Authorization");
         if (header != null && header.startsWith("Bearer ")) {
-            String token = header.substring(7);
+            token = header.substring(7);
+        }
+
+        if (token == null) {
+            token = getTokenFromCookies(request);
+        }
+
+        if (token != null) {
             try {
                 var claims = jwtService.parseToken(token).getPayload();
                 String username = claims.get("username", String.class);
@@ -46,6 +57,20 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 System.out.println("JWT error: " + e.getMessage());
             }
         }
+
         chain.doFilter(request, response);
     }
+
+
+    private String getTokenFromCookies(HttpServletRequest request) {
+    if (request.getCookies() != null) {
+        for (Cookie cookie : request.getCookies()) {
+            if ("accessToken".equals(cookie.getName())) { // tên cookie chứa token
+                return cookie.getValue();
+            }
+        }
+    }
+    return null;
+}
+
 }
