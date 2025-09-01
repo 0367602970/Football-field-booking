@@ -148,11 +148,11 @@ public class AuthService {
         }
 
         Object principal = authentication.getPrincipal();
-
+        System.out.println("Authentication principal: " + principal);
         if (principal instanceof UserDetails userDetails) {
             // load thêm từ DB nếu cần
             User user = userRepository.findByEmail(userDetails.getUsername())
-                    .orElseThrow(() -> new RuntimeException("User not found"));
+                    .orElseThrow(() -> new RuntimeException("User not found 1"));
 
             return Map.of(
                     "id", user.getId(),
@@ -163,7 +163,7 @@ public class AuthService {
         } else if (principal instanceof String email) {
             // nếu principal chỉ là email (String)
             User user = userRepository.findByEmail(email)
-                    .orElseThrow(() -> new RuntimeException("User not found"));
+                    .orElseThrow(() -> new RuntimeException("User not found 2"));
 
             return Map.of(
                     "id", user.getId(),
