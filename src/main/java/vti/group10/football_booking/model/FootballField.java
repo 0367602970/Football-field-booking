@@ -58,6 +58,10 @@ public class FootballField {
     @OneToMany(mappedBy = "field")
     private List<Booking> bookings;
 
+    @Column(name = "latitude")  private Double latitude;
+    @Column(name = "longitude") private Double longitude;
+
+
     @Builder.Default
     @OneToMany(mappedBy = "field", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FieldImage> images =new ArrayList<>();

@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import vti.group10.football_booking.dto.response.FootballFieldResponse;
 import vti.group10.football_booking.dto.response.FootballFieldDetailResponse;
 import vti.group10.football_booking.service.user.FootballFieldService;
+import java.util.List;
+import org.springframework.http.ResponseEntity;
 
 @RestController
 @RequestMapping("/api/fields")
@@ -79,5 +81,14 @@ public class FootballFieldController {
         Pageable pageable = PageRequest.of(page, 20);
         return service.filterFields(city, district, minPrice, maxPrice, pageable);
     }
+
+    @GetMapping("/nearby")
+    public ResponseEntity<List<FootballFieldService.NearbyFieldResponse>> nearby(
+            @RequestParam double lat,
+            @RequestParam double lng,
+            @RequestParam(defaultValue = "5") double radiusKm) {
+        return ResponseEntity.ok(service.findNearbyFields(lat, lng, radiusKm));
+    }
+
 
 }
