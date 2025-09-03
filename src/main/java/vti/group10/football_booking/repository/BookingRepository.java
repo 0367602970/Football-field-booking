@@ -23,6 +23,20 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
             LocalTime startTime
     );
 
+    List<Booking> findByField_IdAndBookingDateAndStatusInAndStartTimeLessThanAndEndTimeGreaterThan(
+            Integer fieldId,
+            LocalDate bookingDate,
+            List<Booking.Status> statuses,
+            LocalTime endTime,
+            LocalTime startTime
+    );
+
+    List<Booking> findByField_IdAndBookingDateAndStatusIn(
+            Integer fieldId,
+            LocalDate bookingDate,
+            List<Booking.Status> statuses
+    );
+
     // Lấy danh sách booking theo user (có thể kèm status)
     @Query("SELECT b FROM Booking b WHERE b.user.id = :userId ORDER BY b.createdAt DESC")
     List<Booking> findBookingsByUser(@Param("userId") int userId);

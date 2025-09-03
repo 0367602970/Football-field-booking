@@ -2,6 +2,7 @@ package vti.group10.football_booking.controller.owner;
 
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,10 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import vti.group10.football_booking.config.security.CustomUserDetails;
 import vti.group10.football_booking.dto.ApiResponse;
 import vti.group10.football_booking.dto.request.FieldRequest;
 import vti.group10.football_booking.dto.request.FieldUpdateRequest;
 import vti.group10.football_booking.dto.response.FieldResponse;
+import vti.group10.football_booking.model.User;
+import vti.group10.football_booking.service.UserService;
 import vti.group10.football_booking.service.owner.FieldService;
 import org.springframework.web.bind.annotation.PutMapping;
 
@@ -26,7 +30,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 @RequiredArgsConstructor
 public class FieldController {
     private final FieldService fieldService;
-
+    private final UserService userService;
     @GetMapping("/fields")
     public ResponseEntity<ApiResponse<Page<FieldResponse>>> getAllFields(
             @RequestParam(defaultValue = "0") int page,
@@ -47,8 +51,12 @@ public class FieldController {
     @PostMapping("/fields")
     public ResponseEntity<ApiResponse<FieldResponse>> createField(
             @Valid @RequestBody FieldRequest req,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
             HttpServletRequest request) {
-        FieldResponse res = fieldService.createField(req);
+
+        User owner = userService.getById(userDetails.getId());
+
+        FieldResponse res = fieldService.createField(req, owner);
         return ResponseEntity.ok(ApiResponse.ok(res, "Field created successfully", request.getRequestURI()));
     }
 

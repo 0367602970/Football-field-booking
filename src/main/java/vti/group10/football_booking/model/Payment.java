@@ -51,10 +51,10 @@ public class Payment {
     private String message;        // message MoMo
 
     public enum Method {
-        MOMO
+        MOMO, CASH
     }
 
     public enum Status {
-        SUCCESS, FAILED
+        SUCCESS, FAILED, PENDING
     }
 }

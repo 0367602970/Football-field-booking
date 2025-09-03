@@ -14,6 +14,12 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import vti.group10.football_booking.config.security.CustomUserDetails;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import java.util.Collection;
+import java.util.List;
+import java.util.ArrayList;
 import vti.group10.football_booking.service.JwtService;
 
 public class JwtAuthFilter extends OncePerRequestFilter {
@@ -28,6 +34,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException {
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            chain.doFilter(request, response);
+            return;
+        }
         String token = null;
 
         // 1. Lấy từ header
@@ -43,9 +53,23 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         if (token != null) {
             try {
                 var claims = jwtService.parseToken(token).getPayload();
-                String username = claims.get("username", String.class);
 
-                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                // Lấy thông tin từ claims
+                Integer userId = Integer.valueOf(claims.getSubject());
+                String username = claims.get("username", String.class);
+                Object rolesObj = claims.get("roles");
+
+                // Chuyển roles sang GrantedAuthority
+                Collection<GrantedAuthority> authorities = new ArrayList<>();
+                if (rolesObj instanceof List) {
+                    for (Object r : (List<?>) rolesObj) {
+                        authorities.add(new SimpleGrantedAuthority(r.toString()));
+                    }
+                } else if (rolesObj instanceof String) {
+                    authorities.add(new SimpleGrantedAuthority(rolesObj.toString()));
+                }
+
+                CustomUserDetails userDetails = new CustomUserDetails(userId, username, "", authorities);
 
                 UsernamePasswordAuthenticationToken auth =
                         new UsernamePasswordAuthenticationToken(
@@ -57,6 +81,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 System.out.println("JWT error: " + e.getMessage());
             }
         }
+
 
         chain.doFilter(request, response);
     }

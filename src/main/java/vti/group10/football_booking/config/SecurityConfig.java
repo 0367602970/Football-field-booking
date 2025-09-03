@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import org.springframework.web.cors.CorsConfigurationSource;
 import vti.group10.football_booking.service.JwtService;
 
 @Configuration
@@ -20,10 +21,13 @@ import vti.group10.football_booking.service.JwtService;
 public class SecurityConfig {
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
-
-    public SecurityConfig(JwtService jwtService, UserDetailsService userDetailsService) {
+    private final CorsConfigurationSource corsConfigurationSource;
+    public SecurityConfig(JwtService jwtService,
+                          UserDetailsService userDetailsService,
+                          CorsConfigurationSource corsConfigurationSource) {
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
+        this.corsConfigurationSource = corsConfigurationSource;
     }
 
     @Bean
@@ -34,6 +38,7 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
+                .cors(cors -> cors.configurationSource(corsConfigurationSource))
             .csrf(csrf -> csrf.disable())
             .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth

@@ -2,7 +2,9 @@ package vti.group10.football_booking.service.owner;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -14,12 +16,16 @@ import vti.group10.football_booking.dto.request.FieldUpdateRequest;
 import vti.group10.football_booking.dto.response.FieldResponse;
 import vti.group10.football_booking.model.FieldImage;
 import vti.group10.football_booking.model.FootballField;
+import vti.group10.football_booking.model.User;
 import vti.group10.football_booking.repository.FootballFieldRepository;
+import vti.group10.football_booking.service.CustomUserDetailsService;
+import vti.group10.football_booking.service.MapService;
 
 @Service
 public class FieldService {
     private final FootballFieldRepository fieldRepo;
-
+    @Autowired
+    private MapService mapService;
     public FieldService(FootballFieldRepository fieldRepo) {
         this.fieldRepo = fieldRepo;
     }
@@ -45,14 +51,33 @@ public class FieldService {
                 .status(field.getStatus().name())
                 .images(field.getImages() != null
                         ? field.getImages().stream()
-                            .map(FieldImage::getImageUrl) // giả sử entity FieldImage có field url
-                            .toList()
+                        .map(FieldImage::getImageUrl) // giả sử entity FieldImage có field url
+                        .toList()
                         : List.of())
                 .build();
     }
 
 
-    public FieldResponse createField(FieldRequest req) {
+    public FieldResponse createField(FieldRequest req, User currentUser) {
+        Double latitude = null;
+        Double longitude = null;
+        System.out.println("Map request: " + req.getAddress() + ", " + req.getDistrict() + ", " + req.getCity());
+
+        // Lấy tọa độ từ MapService
+        try {
+            Map<String, Double> coords = mapService.getCoordinates(
+                    req.getAddress(),
+                    req.getDistrict(),
+                    req.getCity()
+            );
+            System.out.println("Coordinates: " + coords);
+            latitude = coords.get("lat");
+            longitude = coords.get("lng");
+        } catch (Exception e) {
+            // Nếu không tìm thấy, có thể log hoặc bỏ qua
+            System.out.println("Không tìm thấy tọa độ: " + e.getMessage());
+        }
+
         FootballField field = FootballField.builder()
                 .name(req.getName())
                 .address(req.getAddress())
@@ -62,6 +87,9 @@ public class FieldService {
                 .pricePerHour(req.getPricePerHour())
                 .status(FootballField.Status.AVAILABLE)
                 .createdAt(LocalDateTime.now())
+                .owner(currentUser)   // 👈 gán owner luôn
+                .latitude(latitude)
+                .longitude(longitude)
                 .build();
 
         // nếu có ảnh truyền kèm theo
@@ -70,11 +98,11 @@ public class FieldService {
                 FieldImage img = FieldImage.builder()
                         .imageUrl(url)
                         .build();
-                field.addImage(img); // dùng helper
+                field.addImage(img);
             }
         }
-        fieldRepo.save(field);
 
+        fieldRepo.save(field);
         return toDto(field);
     }
 

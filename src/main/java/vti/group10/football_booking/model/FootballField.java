@@ -55,7 +55,7 @@ public class FootballField {
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    @OneToMany(mappedBy = "field")
+    @OneToMany(mappedBy = "field", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Booking> bookings;
 
     @Column(name = "latitude")  private Double latitude;
@@ -67,7 +67,7 @@ public class FootballField {
     private List<FieldImage> images =new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "field")
+    @OneToMany(mappedBy = "field", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FieldSchedule> schedules = new ArrayList<>();
 
     public enum Status {
