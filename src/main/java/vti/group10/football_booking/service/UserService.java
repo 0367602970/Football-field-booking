@@ -19,4 +19,8 @@ public class UserService {
         User savedUser = userRepository.save(user);
         return savedUser;
     }
+    public User getById(Integer id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
 }

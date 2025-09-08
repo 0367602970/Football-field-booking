@@ -55,6 +55,12 @@ public class FootballField {
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
 
+<<<<<<< HEAD
+=======
+    @OneToMany(mappedBy = "field", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Booking> bookings;
+
+>>>>>>> Long
     @Column(name = "latitude")  private Double latitude;
     @Column(name = "longitude") private Double longitude;
 

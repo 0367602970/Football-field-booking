@@ -12,6 +12,7 @@ import vti.group10.football_booking.repository.FootballFieldRepository;
 import vti.group10.football_booking.repository.UserRepository;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -32,13 +33,14 @@ public class BookingFieldService {
 
         // Kiểm tra trùng lịch
         List<Booking> overlaps = bookingRepository
-                .findByField_IdAndBookingDateAndStatusAndStartTimeLessThanAndEndTimeGreaterThan(
+                .findByField_IdAndBookingDateAndStatusInAndStartTimeLessThanAndEndTimeGreaterThan(
                         field.getId(),
                         request.getBookingDate(),
-                        Booking.Status.CONFIRMED,
+                        List.of(Booking.Status.PENDING, Booking.Status.CONFIRMED),
                         request.getEndTime(),
                         request.getStartTime()
                 );
+
         if (!overlaps.isEmpty()) {
             throw new RuntimeException("Field already booked in this time slot");
         }
@@ -84,4 +86,12 @@ public class BookingFieldService {
 
         return bookingRepository.save(booking);
     }
+    public List<Booking> getBookingsByFieldAndDateAndStatus(
+            Integer fieldId,
+            LocalDate bookingDate,
+            List<Booking.Status> statuses
+    ) {
+        return bookingRepository.findByField_IdAndBookingDateAndStatusIn(fieldId, bookingDate, statuses);
+    }
+
 }
