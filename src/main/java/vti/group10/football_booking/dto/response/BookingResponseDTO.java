@@ -3,14 +3,15 @@ package vti.group10.football_booking.dto.response;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import vti.group10.football_booking.model.Booking;
-
+import lombok.Builder;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import vti.group10.football_booking.model.Booking;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class BookingResponseDTO {
     private Integer id;
 
@@ -22,6 +23,7 @@ public class BookingResponseDTO {
     // Field info
     private Integer fieldId;
     private String fieldName;
+    private String clusterName; // thêm tên cụm sân
 
     // Booking info
     private LocalDate bookingDate;

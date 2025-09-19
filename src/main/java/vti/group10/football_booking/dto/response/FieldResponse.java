@@ -1,20 +1,25 @@
 package vti.group10.football_booking.dto.response;
 
-import java.util.List;
-
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class FieldResponse {
-    private int id;
+    private Integer id;
     private String name;
-    private String address;
-    private String district;
-    private String city;
     private String description;
     private Double pricePerHour;
     private String status;
-    private List<String> images;
+
+    // Thông tin cụm sân
+    private Integer clusterId;
+    private String clusterName;
+    private String clusterAddress;
+    private String clusterDistrict;
+    private String clusterCity;
 }

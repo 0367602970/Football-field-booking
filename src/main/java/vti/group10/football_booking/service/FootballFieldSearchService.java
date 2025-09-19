@@ -35,6 +35,7 @@ public class FootballFieldSearchService {
         Page<FootballField> page = footballFieldRepository.filterFootballFields(
                 criteria.getCity(),
                 criteria.getDistrict(),
+                criteria.getAddress(),
                 minPrice,
                 maxPrice,
                 Pageable.unpaged() // trả hết kết quả

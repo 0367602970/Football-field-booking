@@ -43,10 +43,9 @@ public class SecurityConfig {
             .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/", "/api/auth/**", "/api/payment/momo/ipn").permitAll()
-                    .requestMatchers("/api/fields/search").permitAll()
-                    .requestMatchers("/api/fields/**").permitAll()
                     .requestMatchers("/api/profile/update").authenticated()
-                    .requestMatchers("/api/user/bookings/history").hasRole("USER")
+                    .requestMatchers("/clusters/**").permitAll()
+                    .requestMatchers("/owner/clusters/**").hasRole("OWNER")
                     .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter.class)

@@ -7,6 +7,7 @@ import java.time.LocalTime;
 
 @Data
 public class BookingRequest {
+    private Integer userId;
     private Integer fieldId;
     private LocalDate bookingDate;
     private LocalTime startTime;

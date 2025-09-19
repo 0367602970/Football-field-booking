@@ -3,7 +3,6 @@ package vti.group10.football_booking.repository;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,6 +14,10 @@ import vti.group10.football_booking.model.Booking;
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Integer> {
 
+    // Lấy booking theo userId
+    List<Booking> findByUserId(Integer userId);
+
+    // Kiểm tra trùng lịch (1 trạng thái)
     List<Booking> findByField_IdAndBookingDateAndStatusAndStartTimeLessThanAndEndTimeGreaterThan(
             Integer fieldId,
             LocalDate bookingDate,
@@ -23,6 +26,7 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
             LocalTime startTime
     );
 
+    // Kiểm tra trùng lịch (nhiều trạng thái)
     List<Booking> findByField_IdAndBookingDateAndStatusInAndStartTimeLessThanAndEndTimeGreaterThan(
             Integer fieldId,
             LocalDate bookingDate,
@@ -31,24 +35,25 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
             LocalTime startTime
     );
 
+    // Lấy danh sách booking theo field + date + status
     List<Booking> findByField_IdAndBookingDateAndStatusIn(
             Integer fieldId,
             LocalDate bookingDate,
             List<Booking.Status> statuses
     );
 
-    // Lấy danh sách booking theo user (có thể kèm status)
+    // Lấy danh sách booking theo user (không phân trang)
     @Query("SELECT b FROM Booking b WHERE b.user.id = :userId ORDER BY b.createdAt DESC")
     List<Booking> findBookingsByUser(@Param("userId") int userId);
 
-    // Phân trang
+    // Lấy danh sách booking theo user (có phân trang)
     @Query("SELECT b FROM Booking b WHERE b.user.id = :userId ORDER BY b.createdAt DESC")
     org.springframework.data.domain.Page<Booking> findBookingsByUser(
             @Param("userId") int userId,
             org.springframework.data.domain.Pageable pageable
     );
 
-    // Tính tổng doanh thu theo field trong khoảng ngày
+    // Tính tổng doanh thu theo field
     @Query("SELECT SUM(b.totalPrice) FROM Booking b " +
             "WHERE b.field.id = :fieldId AND b.status = 'CONFIRMED' " +
             "AND b.bookingDate BETWEEN :startDate AND :endDate")
@@ -58,7 +63,7 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
             @Param("endDate") LocalDate endDate
     );
 
-    // Đếm số booking theo field trong khoảng ngày
+    // Đếm số booking theo field
     @Query("SELECT COUNT(b) FROM Booking b " +
             "WHERE b.field.id = :fieldId AND b.status = 'CONFIRMED' " +
             "AND b.bookingDate BETWEEN :startDate AND :endDate")
@@ -68,18 +73,14 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
             @Param("endDate") LocalDate endDate
     );
 
-    // Lấy danh sách booking theo owner và trạng thái
-    @Query("SELECT b FROM Booking b WHERE b.field.owner.id = :ownerId AND b.status = :status")
+    // Lấy booking theo owner và status (sửa theo cluster.owner)
+    @Query("SELECT b FROM Booking b WHERE b.field.cluster.owner.id = :ownerId AND b.status = :status")
     List<Booking> findBookingsByOwnerAndStatus(
             @Param("ownerId") int ownerId,
             @Param("status") Booking.Status status
     );
 
-    // Lấy booking theo id
-    Optional<Booking> findById(int bookingId);
-
-        // Lấy danh sách booking theo owner
-        @Query("SELECT b FROM Booking b WHERE b.field.owner.id = :ownerId")
-        List<Booking> findBookingsByOwner(@Param("ownerId") int ownerId);
-    
+    // Lấy booking theo owner (tất cả)
+    @Query("SELECT b FROM Booking b WHERE b.field.cluster.owner.id = :ownerId")
+    List<Booking> findBookingsByOwner(@Param("ownerId") int ownerId);
 }

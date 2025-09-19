@@ -1,4 +1,5 @@
 package vti.group10.football_booking.service.user;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,8 +10,6 @@ import vti.group10.football_booking.model.Booking;
 import vti.group10.football_booking.model.User;
 import vti.group10.football_booking.repository.BookingRepository;
 import vti.group10.football_booking.repository.UserRepository;
-
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +24,7 @@ public class BookingHistoryService {
         User user = userRepository.findByEmail(currentEmail)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Query
+        // Query booking theo user
         Page<Booking> bookings = bookingRepository.findBookingsByUser(user.getId(), pageable);
 
         // Map Booking → BookingHistoryResponse
@@ -33,9 +32,15 @@ public class BookingHistoryService {
             BookingHistoryResponse dto = new BookingHistoryResponse();
             dto.setBookingId(b.getId());
             dto.setFieldName(b.getField().getName());
-            dto.setAddress(b.getField().getAddress());
-            dto.setDistrict(b.getField().getDistrict());
-            dto.setCity(b.getField().getCity());
+
+            // Lấy thông tin cụm sân từ field
+            if (b.getField().getCluster() != null) {
+                dto.setClusterName(b.getField().getCluster().getName());
+                dto.setAddress(b.getField().getCluster().getAddress());
+                dto.setDistrict(b.getField().getCluster().getDistrict());
+                dto.setCity(b.getField().getCluster().getCity());
+            }
+
             dto.setBookingDate(b.getBookingDate());
             dto.setStartTime(b.getStartTime());
             dto.setEndTime(b.getEndTime());

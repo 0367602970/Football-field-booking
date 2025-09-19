@@ -9,10 +9,12 @@ import lombok.NoArgsConstructor;
 public class SearchCriteria {
     private String city;
     private String district;
+    private String address;
     private Double minPrice;
     private Double maxPrice;
     private String status;
     private Double price;
+    private String clusterName;
 
     // getters & setters
 }

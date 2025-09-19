@@ -1,10 +1,10 @@
 package vti.group10.football_booking.dto.request;
 
-import jakarta.validation.constraints.NotBlank;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 public class FieldImageRequest {
-    @NotBlank
     private String imageUrl;
 }
