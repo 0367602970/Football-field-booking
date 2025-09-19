@@ -107,12 +107,12 @@ public class AuthController {
         ResponseCookie accessCookie = ResponseCookie.from("accessToken", authResponse.getAccessToken())
                 .httpOnly(true).secure(true).path("/")
                 .maxAge(authResponse.getExpiresIn()) // ví dụ 3600
-                .sameSite("Strict").build();
+                .sameSite("None").build();
 
         ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", authResponse.getRefreshToken())
                 .httpOnly(true).secure(true).path("/")
                 .maxAge(7 * 24 * 60 * 60) // 7 ngày
-                .sameSite("Strict").build();
+                .sameSite("None").build();
 
         response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
         response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());

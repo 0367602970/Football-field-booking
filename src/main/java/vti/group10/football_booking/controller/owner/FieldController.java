@@ -1,20 +1,19 @@
 package vti.group10.football_booking.controller.owner;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Part;
 import org.springframework.data.domain.Page;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 import vti.group10.football_booking.config.security.CustomUserDetails;
 import vti.group10.football_booking.dto.ApiResponse;
 import vti.group10.football_booking.dto.request.FieldRequest;
@@ -23,7 +22,9 @@ import vti.group10.football_booking.dto.response.FieldResponse;
 import vti.group10.football_booking.model.User;
 import vti.group10.football_booking.service.UserService;
 import vti.group10.football_booking.service.owner.FieldService;
-import org.springframework.web.bind.annotation.PutMapping;
+
+import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/owner")
@@ -47,18 +48,39 @@ public class FieldController {
     public ResponseEntity<FieldResponse> getFieldById(@PathVariable Integer id) {
         return ResponseEntity.ok(fieldService.getFieldById(id));
     }
-
-    @PostMapping("/fields")
+    @PostMapping(value = "/fields", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<ApiResponse<FieldResponse>> createField(
-            @Valid @RequestBody FieldRequest req,
+            @RequestPart("field") String fieldJson,
+            @RequestPart(value = "images", required = false) List<MultipartFile> images,
             @AuthenticationPrincipal CustomUserDetails userDetails,
-            HttpServletRequest request) {
+            HttpServletRequest request) throws IOException, ServletException {
+
+        // Parse JSON string thành FieldRequest
+        for (Part p : request.getParts()) {
+            System.out.println("Part: " + p.getName() + ", content-type=" + p.getContentType() + ", size=" + p.getSize());
+        }
+        System.out.println("Received JSON: " + fieldJson);
+        ObjectMapper mapper = new ObjectMapper();
+        FieldRequest req = mapper.readValue(fieldJson, FieldRequest.class);
 
         User owner = userService.getById(userDetails.getId());
 
-        FieldResponse res = fieldService.createField(req, owner);
+        FieldResponse res = fieldService.createField(req, owner, images);
         return ResponseEntity.ok(ApiResponse.ok(res, "Field created successfully", request.getRequestURI()));
     }
+
+
+//    @PostMapping("/fields")
+//    public ResponseEntity<ApiResponse<FieldResponse>> createField(
+//            @Valid @RequestBody FieldRequest req,
+//            @AuthenticationPrincipal CustomUserDetails userDetails,
+//            HttpServletRequest request) {
+//
+//        User owner = userService.getById(userDetails.getId());
+//
+//        FieldResponse res = fieldService.createField(req, owner);
+//        return ResponseEntity.ok(ApiResponse.ok(res, "Field created successfully", request.getRequestURI()));
+//    }
 
     @PutMapping("fields/{id}")
     public ResponseEntity<ApiResponse<FieldResponse>> updateField(@PathVariable int id,

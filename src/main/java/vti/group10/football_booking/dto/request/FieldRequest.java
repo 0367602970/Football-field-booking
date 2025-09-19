@@ -27,5 +27,12 @@ public class FieldRequest {
 
     private int typeId;
 
-    private List<String> images;
+    private String status;
+
+    private Double latitude;
+
+    private Double longitude;
+
+    private Integer ownerId;
+//    private List<String> images;
 }

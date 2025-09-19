@@ -42,6 +42,8 @@ public class FootballFieldService {
                 .status(field.getStatus().name())
                 .ownerName(field.getOwner().getFullName())
                 .imageUrls(limitImages(field.getImages(), 8))
+                .latitude(field.getLatitude())
+                .longitude(field.getLongitude())
                 .build();
     }
 

@@ -17,4 +17,6 @@ public class FieldResponse {
     private Double pricePerHour;
     private String status;
     private List<String> images;
+    private Double latitude;
+    private Double longitude;
 }

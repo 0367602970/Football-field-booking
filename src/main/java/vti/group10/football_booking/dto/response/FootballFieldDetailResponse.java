@@ -22,4 +22,6 @@ public class FootballFieldDetailResponse {
     private String status;
     private String ownerName;       // tên chủ sân
     private List<String> imageUrls; // tối đa 8 ảnh
+    private Double latitude;
+    private Double longitude;
 }
