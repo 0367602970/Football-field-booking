@@ -3,20 +3,10 @@ package vti.group10.football_booking.model;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "users")
@@ -33,6 +23,7 @@ public class User {
     private String password;
 
     @Column(unique = true, length = 100)
+    @Email
     private String email;
 
     @Column(name = "full_name", length = 100)
@@ -48,6 +39,7 @@ public class User {
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<Booking> bookings;
 
     @OneToMany(mappedBy = "user")
@@ -58,8 +50,18 @@ public class User {
 
     @Column(columnDefinition = "MEDIUMTEXT")
     private String refreshToken;
-    
+
     public enum Role {
         USER, ADMIN, OWNER
     }
+
+    // Thêm constructor nhận id để tạo "stub entity"
+    public User(Integer id) {
+        this.id = id;
+    }
+    public enum YesNo {
+        YES, NO
+    }
+    @Enumerated(EnumType.STRING)
+    private YesNo visible = YesNo.YES;
 }

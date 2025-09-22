@@ -14,6 +14,7 @@ import vti.group10.football_booking.model.Booking;
 public class BookingDTO {
     private Integer id;
     private UserDTO user;
+    private FieldDTO field;
     private LocalDate bookingDate;
     private LocalTime startTime;
     private LocalTime endTime;

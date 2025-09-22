@@ -45,6 +45,7 @@ public class AuthService {
                 .fullName(req.getFullName())
                 .phone(req.getPhone())
                 .role(role)
+                .visible(User.YesNo.YES)
                 .createdAt(LocalDateTime.now())
                 .build();
 

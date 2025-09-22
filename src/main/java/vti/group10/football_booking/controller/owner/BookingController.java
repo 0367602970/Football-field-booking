@@ -15,6 +15,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import vti.group10.football_booking.dto.ApiResponse;
 import vti.group10.football_booking.dto.BookingDTO;
+import vti.group10.football_booking.dto.FieldDTO;
+import vti.group10.football_booking.dto.UserDTO;
 import vti.group10.football_booking.model.Booking;
 import vti.group10.football_booking.service.owner.BookingService;
 
@@ -43,13 +45,40 @@ public class BookingController {
         }
 
         @PutMapping("/{bookingId}/status")
-        public ResponseEntity<ApiResponse<Booking>> updateBookingStatus(
-                        @PathVariable int bookingId,
-                        @RequestParam Booking.Status status,
-                        HttpServletRequest request) {
-                Booking updated = bookingService.updateBookingStatus(bookingId, status);
-                return ResponseEntity.ok(
-                                ApiResponse.ok(updated, "Booking status updated", request.getRequestURI()));
+        public ResponseEntity<ApiResponse<BookingDTO>> updateBookingStatus(
+                @PathVariable int bookingId,
+                @RequestParam Booking.Status status,
+                HttpServletRequest request) {
+
+            Booking updated = bookingService.updateBookingStatus(bookingId, status);
+
+            // Map Booking -> BookingDTO
+            UserDTO userDTO = new UserDTO(
+                    updated.getUser().getId(),
+                    updated.getUser().getEmail(),
+                    updated.getUser().getFullName(),
+                    updated.getUser().getPhone(),
+                    updated.getUser().getRole().name()
+            );
+
+            FieldDTO fieldDTO = null;
+            if (updated.getField() != null) {
+                fieldDTO = new FieldDTO(updated.getField().getId(), updated.getField().getName());
+            }
+
+            BookingDTO dto = new BookingDTO(
+                    updated.getId(),
+                    userDTO,
+                    fieldDTO,
+                    updated.getBookingDate(),
+                    updated.getStartTime(),
+                    updated.getEndTime(),
+                    updated.getTotalPrice(),
+                    updated.getStatus()
+            );
+
+            return ResponseEntity.ok(
+                    ApiResponse.ok(dto, "Booking status updated", request.getRequestURI()));
         }
 
         @DeleteMapping("/{bookingId}")

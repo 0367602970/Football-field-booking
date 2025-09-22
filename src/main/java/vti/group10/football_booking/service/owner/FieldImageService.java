@@ -14,28 +14,29 @@ import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 import vti.group10.football_booking.model.FieldImage;
-import vti.group10.football_booking.model.FootballField;
 import vti.group10.football_booking.repository.FieldImageRepository;
-import vti.group10.football_booking.repository.FootballFieldRepository;
+import vti.group10.football_booking.repository.FieldClusterRepository;
+import vti.group10.football_booking.model.FieldCluster;
+
 
 @Service
 @RequiredArgsConstructor
 public class FieldImageService {
 
-    private final FootballFieldRepository fieldRepo;
     private final FieldImageRepository imageRepo;
+    private final FieldClusterRepository clusterRepo; // cần để lấy cluster
 
     @Value("${app.upload.dir:uploads}")
     private String uploadDir;
 
-    public FieldImage addImage(Integer fieldId, MultipartFile file) throws IOException {
-        FootballField field = fieldRepo.findById(fieldId)
-                .orElseThrow(() -> new RuntimeException("Field not found"));
+    public FieldImage addImage(Integer clusterId, MultipartFile file) throws IOException {
+        // Lấy cluster từ DB
+        FieldCluster cluster = clusterRepo.findById(clusterId)
+                .orElseThrow(() -> new RuntimeException("Cluster not found"));
 
-        // Thư mục lưu ảnh: {projectDir}/uploads/fields/{fieldId}
-        String projectDir = System.getProperty("user.dir"); // thư mục gốc project
-        Path uploadPath = Paths.get(projectDir, uploadDir, "fields", String.valueOf(fieldId));
-
+        // Thư mục lưu ảnh: {projectDir}/uploads/clusters/{clusterId}
+        String projectDir = System.getProperty("user.dir");
+        Path uploadPath = Paths.get(projectDir, uploadDir, "clusters", String.valueOf(clusterId));
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
@@ -44,23 +45,23 @@ public class FieldImageService {
         String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
         Path filePath = uploadPath.resolve(fileName);
 
-        // Lưu file vào disk
+        // Lưu file
         Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-        // Đường dẫn để client truy cập
-        String imageUrl = "/uploads/fields/" + fieldId + "/" + fileName;
+        // URL để client truy cập
+        String imageUrl = "/uploads/clusters/" + clusterId + "/" + fileName;
 
-        // Lưu DB
+        // Lưu vào DB
         FieldImage image = FieldImage.builder()
+                .cluster(cluster)
                 .imageUrl(imageUrl)
-                .field(field)
                 .build();
 
-        return fieldRepo.save(image);
+        return imageRepo.save(image);
     }
 
-    public List<FieldImage> getImages(Integer fieldId) {
-        return imageRepo.findByFieldId(fieldId);
+    public List<FieldImage> getImages(Integer clusterId) {
+        return imageRepo.findByClusterId(clusterId);
     }
 
     public void deleteImage(Integer imageId) {

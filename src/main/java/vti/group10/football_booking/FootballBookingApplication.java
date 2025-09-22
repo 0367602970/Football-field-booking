@@ -2,6 +2,7 @@ package vti.group10.football_booking;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 // @SpringBootApplication(
 //     exclude = {
@@ -9,6 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 //         org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration.class
 //     }
 // )
+@EnableScheduling
 @SpringBootApplication
 public class FootballBookingApplication {
 

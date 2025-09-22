@@ -34,12 +34,19 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException {
+        System.out.println("🔥 JwtAuthFilter triggered for " + request.getRequestURI());
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             chain.doFilter(request, response);
             return;
         }
         String token = null;
-
+        System.out.println("Authorization header: " + request.getHeader("Authorization"));
+        if (request.getCookies() != null) {
+            for (Cookie c : request.getCookies()) {
+                System.out.println("Cookie: " + c.getName() + "=" + c.getValue());
+            }
+        }
+        System.out.println("token from cookie: " + getTokenFromCookies(request));
         // 1. Lấy từ header
         String header = request.getHeader("Authorization");
         if (header != null && header.startsWith("Bearer ")) {
@@ -68,7 +75,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 } else if (rolesObj instanceof String) {
                     authorities.add(new SimpleGrantedAuthority(rolesObj.toString()));
                 }
-
+                System.out.println("✅ User authenticated: " + username);
+                System.out.println("✅ Authorities parsed from JWT: " + authorities);
                 CustomUserDetails userDetails = new CustomUserDetails(userId, username, "", authorities);
 
                 UsernamePasswordAuthenticationToken auth =
@@ -76,6 +84,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                                 userDetails, null, userDetails.getAuthorities()
                         );
                 SecurityContextHolder.getContext().setAuthentication(auth);
+                System.out.println("👉 SecurityContext set with principal=" + userDetails.getUsername()
+                        + ", roles=" + userDetails.getAuthorities());
 
             } catch (JwtException e) {
                 System.out.println("JWT error: " + e.getMessage());

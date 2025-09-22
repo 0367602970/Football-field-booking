@@ -51,7 +51,7 @@ public class Payment {
     private String message;        // message MoMo
 
     public enum Method {
-        MOMO, CASH
+        MOMO, CASH, BANK
     }
 
     public enum Status {

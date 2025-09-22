@@ -8,6 +8,7 @@ import java.time.LocalTime;
 public class BookingHistoryResponse {
     private Integer bookingId;
     private String fieldName;
+    private String clusterName;
     private String address;
     private String district;
     private String city;
@@ -16,4 +17,5 @@ public class BookingHistoryResponse {
     private LocalTime endTime;
     private Double totalPrice;
     private String status;
+    private String paymentToken;
 }
