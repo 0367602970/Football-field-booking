@@ -25,6 +25,16 @@ public class BookingFieldController {
 
     private final BookingFieldService bookingService;
 
+    @GetMapping("/{bookingId}")
+    public ResponseEntity<?> getBookingById(@PathVariable Integer bookingId) {
+        try {
+            Booking booking = bookingService.getBookingById(bookingId);
+            return ResponseEntity.ok(mapToDTO(booking));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Booking not found with id: " + bookingId);
+        }
+    }
     @GetMapping("/field/{fieldId}")
     public ResponseEntity<?> getBookingsByFieldAndDate(
             @PathVariable Integer fieldId,
@@ -111,6 +121,7 @@ public class BookingFieldController {
         dto.setEndTime(booking.getEndTime());
         dto.setTotalPrice(booking.getTotalPrice());
         dto.setStatus(booking.getStatus());
+        dto.setPaymentToken(booking.getPaymentToken());
         return dto;
     }
 

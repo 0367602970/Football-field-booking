@@ -1,8 +1,10 @@
 package vti.group10.football_booking.controller.owner;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import vti.group10.football_booking.dto.request.FieldClusterRequest;
 import vti.group10.football_booking.dto.response.ClusterResponse;
 import vti.group10.football_booking.model.FieldCluster;
@@ -18,15 +20,20 @@ public class OwnerFieldClusterController {
     private final OwnerFieldClusterService clusterService;
 
     // Tạo cụm sân (kèm ảnh & sân con)
-    @PostMapping
-    public ResponseEntity<ClusterResponse> createCluster(@RequestBody FieldClusterRequest request) {
-        FieldCluster cluster = clusterService.createCluster(request);
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ClusterResponse> createCluster(
+            @RequestPart("cluster") FieldClusterRequest request,
+            @RequestPart(value = "images", required = false) List<MultipartFile> images) {
+
+        FieldCluster cluster = clusterService.createCluster(request, images);
         return ResponseEntity.ok(clusterService.mapClusterToResponse(cluster));
     }
+
 
     // Lấy danh sách cluster của owner hiện tại
     @GetMapping
     public ResponseEntity<List<ClusterResponse>> listClusters() {
+        System.out.println("Controller nhận request owner/clusters" );
         return ResponseEntity.ok(clusterService.listAllClusters());
     }
 
@@ -38,11 +45,15 @@ public class OwnerFieldClusterController {
 
     // Cập nhật cluster
     @PutMapping("/{clusterId}")
-    public ResponseEntity<ClusterResponse> updateCluster(@PathVariable int clusterId,
-                                                         @RequestBody FieldClusterRequest request) {
-        FieldCluster cluster = clusterService.updateCluster(clusterId, request);
+    public ResponseEntity<ClusterResponse> updateCluster(
+            @PathVariable int clusterId,
+            @RequestPart("cluster") FieldClusterRequest request,
+            @RequestPart(value = "images", required = false) List<MultipartFile> images) {
+
+        FieldCluster cluster = clusterService.updateCluster(clusterId, request, images);
         return ResponseEntity.ok(clusterService.mapClusterToResponse(cluster));
     }
+
 
     // Thêm ảnh vào cluster
     @PostMapping("/{clusterId}/images")

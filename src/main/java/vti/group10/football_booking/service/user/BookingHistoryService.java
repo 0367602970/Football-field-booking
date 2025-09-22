@@ -46,6 +46,7 @@ public class BookingHistoryService {
             dto.setEndTime(b.getEndTime());
             dto.setTotalPrice(b.getTotalPrice());
             dto.setStatus(b.getStatus().name());
+            dto.setPaymentToken(b.getPaymentToken());
             return dto;
         });
     }

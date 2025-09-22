@@ -31,4 +31,5 @@ public class BookingResponseDTO {
     private LocalTime endTime;
     private Double totalPrice;
     private Booking.Status status;
+    private String paymentToken;
 }

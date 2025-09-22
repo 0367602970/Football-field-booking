@@ -18,6 +18,7 @@ public class FootballFieldQueryService {
     // Xem tất cả sân con
     public List<FieldResponse> listAllFields() {
         return fieldRepository.findAll().stream()
+                .filter(f -> f.getVisible() == FootballField.YesNo.YES)
                 .map(this::mapFieldToResponse)
                 .collect(Collectors.toList());
     }

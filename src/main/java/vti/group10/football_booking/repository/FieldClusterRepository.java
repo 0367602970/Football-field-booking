@@ -19,6 +19,9 @@ public interface FieldClusterRepository extends JpaRepository<FieldCluster, Inte
     @EntityGraph(attributePaths = {"fields", "images", "owner"})
     List<FieldCluster> findAll();
 
+    @EntityGraph(attributePaths = {"fields", "images", "owner"})
+    @Query("SELECT c FROM FieldCluster c WHERE c.visible = 'YES'")
+    Page<FieldCluster> findAllVisible(Pageable pageable);
 
     @EntityGraph(attributePaths = {"fields", "images", "owner"})
     @Query("SELECT c FROM FieldCluster c " +
@@ -44,4 +47,25 @@ public interface FieldClusterRepository extends JpaRepository<FieldCluster, Inte
 
     @EntityGraph(attributePaths = {"fields", "images", "owner"})
     Optional<FieldCluster> findByIdAndOwner_Id(Integer clusterId, Integer ownerId);
+
+    @EntityGraph(attributePaths = {"fields", "images", "owner"})
+    @Query("""
+           SELECT c FROM FieldCluster c
+           LEFT JOIN c.fields f
+           LEFT JOIN c.images i
+           LEFT JOIN c.owner o
+           WHERE (6371 * acos(
+                cos(radians(:lat)) *
+                cos(radians(c.latitude)) *
+                cos(radians(c.longitude) - radians(:lng)) +
+                sin(radians(:lat)) * sin(radians(c.latitude))
+           )) <= :radiusKm
+           """)
+    List<FieldCluster> findNearby(
+            @Param("lat") double latitude,
+            @Param("lng") double longitude,
+            @Param("radiusKm") double radiusKm
+    );
+
+
 }

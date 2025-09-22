@@ -26,6 +26,7 @@ public class FootballFieldService {
                 .pricePerHour(request.getPricePerHour())
                 .status(FootballField.Status.valueOf(request.getStatus()))
                 .cluster(cluster) // gán cụm sân
+                .visible(FootballField.YesNo.YES)
                 .build();
         return fieldRepository.save(field);
     }
@@ -45,7 +46,11 @@ public class FootballFieldService {
 
     // Xóa sân con
     public void deleteField(int fieldId) {
-        fieldRepository.deleteById(fieldId);
+
+        FootballField field = fieldRepository.findById(fieldId)
+                .orElseThrow(() -> new RuntimeException("Field not found with id: " + fieldId));
+        field.setVisible(FootballField.YesNo.NO);
+        fieldRepository.save(field);
     }
 
     // Map sang DTO: trả thông tin sân + cụm sân
@@ -68,7 +73,7 @@ public class FootballFieldService {
 
     // Lấy danh sách sân con theo cụm sân
     public List<FieldResponse> listFieldsByCluster(int clusterId) {
-        return fieldRepository.findByClusterId(clusterId).stream()
+        return fieldRepository.findByClusterIdAndVisible(clusterId, FootballField.YesNo.YES).stream()
                 .map(this::mapFieldToResponse)
                 .collect(Collectors.toList());
     }

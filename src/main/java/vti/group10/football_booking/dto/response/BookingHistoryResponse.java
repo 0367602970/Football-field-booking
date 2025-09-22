@@ -17,4 +17,5 @@ public class BookingHistoryResponse {
     private LocalTime endTime;
     private Double totalPrice;
     private String status;
+    private String paymentToken;
 }

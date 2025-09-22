@@ -34,7 +34,7 @@ public class FieldCluster {
     @EqualsAndHashCode.Exclude
     private User owner;
 
-    @OneToMany(mappedBy = "cluster", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "cluster", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Set<FieldImage> images = new HashSet<>();
@@ -43,4 +43,10 @@ public class FieldCluster {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Set<FootballField> fields = new HashSet<>();
+    @Enumerated(EnumType.STRING)
+    private YesNo visible = YesNo.YES;
+
+    public enum YesNo {
+        YES, NO
+    }
 }

@@ -3,6 +3,7 @@ package vti.group10.football_booking.model;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.*;
@@ -38,6 +39,7 @@ public class User {
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<Booking> bookings;
 
     @OneToMany(mappedBy = "user")
@@ -57,4 +59,9 @@ public class User {
     public User(Integer id) {
         this.id = id;
     }
+    public enum YesNo {
+        YES, NO
+    }
+    @Enumerated(EnumType.STRING)
+    private YesNo visible = YesNo.YES;
 }

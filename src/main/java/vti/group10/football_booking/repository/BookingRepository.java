@@ -1,8 +1,10 @@
 package vti.group10.football_booking.repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,7 +15,10 @@ import vti.group10.football_booking.model.Booking;
 
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Integer> {
-
+    @Query("SELECT b FROM Booking b LEFT JOIN FETCH b.payment WHERE b.status = :status AND b.createdAt < :time")
+    List<Booking> findPendingBookingsWithPayment(@Param("status") Booking.Status status,
+                                                 @Param("time") LocalDateTime time);
+    List<Booking> findByStatusAndCreatedAtBefore(Booking.Status status, LocalDateTime time);
     // Lấy booking theo userId
     List<Booking> findByUserId(Integer userId);
 
@@ -41,13 +46,14 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
             LocalDate bookingDate,
             List<Booking.Status> statuses
     );
+    Optional<Booking> findByPaymentToken(String paymentToken);
 
     // Lấy danh sách booking theo user (không phân trang)
     @Query("SELECT b FROM Booking b WHERE b.user.id = :userId ORDER BY b.createdAt DESC")
     List<Booking> findBookingsByUser(@Param("userId") int userId);
 
     // Lấy danh sách booking theo user (có phân trang)
-    @Query("SELECT b FROM Booking b WHERE b.user.id = :userId ORDER BY b.createdAt DESC")
+    @Query("SELECT b FROM Booking b WHERE b.user.id = :userId ORDER BY b.id DESC")
     org.springframework.data.domain.Page<Booking> findBookingsByUser(
             @Param("userId") int userId,
             org.springframework.data.domain.Pageable pageable
@@ -81,6 +87,11 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
     );
 
     // Lấy booking theo owner (tất cả)
-    @Query("SELECT b FROM Booking b WHERE b.field.cluster.owner.id = :ownerId")
+    @Query("""
+    SELECT b FROM Booking b 
+    WHERE b.field.visible = vti.group10.football_booking.model.FootballField.YesNo.YES
+      AND b.field.cluster.visible = vti.group10.football_booking.model.FieldCluster.YesNo.YES
+      AND b.field.cluster.owner.id = :ownerId
+    """)
     List<Booking> findBookingsByOwner(@Param("ownerId") int ownerId);
 }

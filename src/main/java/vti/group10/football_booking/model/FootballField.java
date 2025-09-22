@@ -51,9 +51,15 @@ public class FootballField {
     public enum Status {
         AVAILABLE, MAINTENANCE
     }
-
+    @Enumerated(EnumType.STRING)
+    @Column(name = "visible")
+    private YesNo visible = YesNo.YES;
+    public enum YesNo {
+        YES, NO
+    }
     // Constructor nhận id
     public FootballField(Integer id) {
         this.id = id;
     }
 }
+

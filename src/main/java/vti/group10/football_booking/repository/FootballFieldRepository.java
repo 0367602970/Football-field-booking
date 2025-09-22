@@ -14,18 +14,20 @@ public interface FootballFieldRepository extends JpaRepository<FootballField, In
 
     // Lấy tất cả sân theo clusterId
     List<FootballField> findByClusterId(int clusterId);
-
+    List<FootballField> findByClusterIdAndVisible(int clusterId, FootballField.YesNo visible);
     // Search sân theo tên sân hoặc tên cluster
     @Query("SELECT f FROM FootballField f " +
-            "WHERE LOWER(f.name) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
-            "OR LOWER(f.cluster.name) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+            "WHERE (LOWER(f.name) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+            "OR LOWER(f.cluster.name) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
+            "AND f.visible = 'YES'")
     List<FootballField> searchFields(@Param("keyword") String keyword);
 
     // Filter sân con theo giá và cluster
     @Query("SELECT f FROM FootballField f " +
             "WHERE (:minPrice IS NULL OR f.pricePerHour >= :minPrice) " +
             "AND (:maxPrice IS NULL OR f.pricePerHour <= :maxPrice) " +
-            "AND (:clusterName IS NULL OR LOWER(f.cluster.name) LIKE LOWER(CONCAT('%', :clusterName, '%')))")
+            "AND (:clusterName IS NULL OR LOWER(f.cluster.name) LIKE LOWER(CONCAT('%', :clusterName, '%'))) " +
+            "AND f.visible = 'YES'")
     List<FootballField> filterFieldsByPriceAndCluster(
             @Param("minPrice") Double minPrice,
             @Param("maxPrice") Double maxPrice,
