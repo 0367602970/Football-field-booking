@@ -43,6 +43,7 @@ public class User {
     private List<Booking> bookings;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<Notification> notifications;
 
     @OneToMany(mappedBy = "generatedBy")

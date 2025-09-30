@@ -1,5 +1,6 @@
 package vti.group10.football_booking.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
