@@ -2,20 +2,8 @@ package vti.group10.football_booking.model;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @Table(name = "football_fields")
@@ -24,35 +12,54 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class FootballField {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private String name;
 
-    private String location;
+    @Column(name = "created_at")
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    private String description;
 
     @Column(name = "price_per_hour")
     private Double pricePerHour;
 
-    private String description;
-
     @Enumerated(EnumType.STRING)
     private Status status = Status.AVAILABLE;
 
-    @Column(name = "created_at")
-    private LocalDateTime createdAt = LocalDateTime.now();
+    // Quan hệ với FieldCluster
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cluster_id", nullable = false)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private FieldCluster cluster;
 
-    @OneToMany(mappedBy = "field")
+    // Optional: các booking, schedule nếu bạn cần
+    @OneToMany(mappedBy = "field", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private List<Booking> bookings;
 
-    @OneToMany(mappedBy = "field")
-    private List<FieldImage> images;
-
-    @OneToMany(mappedBy = "field")
+    @OneToMany(mappedBy = "field", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private List<FieldSchedule> schedules;
 
     public enum Status {
         AVAILABLE, MAINTENANCE
     }
+    @Enumerated(EnumType.STRING)
+    @Column(name = "visible")
+    private YesNo visible = YesNo.YES;
+    public enum YesNo {
+        YES, NO
+    }
+    // Constructor nhận id
+    public FootballField(Integer id) {
+        this.id = id;
+    }
 }
+

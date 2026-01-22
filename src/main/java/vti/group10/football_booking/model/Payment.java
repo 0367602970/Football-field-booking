@@ -41,10 +41,17 @@ public class Payment {
     private LocalDateTime paymentDate = LocalDateTime.now();
 
     @Enumerated(EnumType.STRING)
-    private Status status = Status.PENDING;
+    private Status status;
+
+    // Một số trường trace MoMo
+    private String momoOrderId;   // orderId bạn gửi sang MoMo
+    private String momoRequestId; // requestId bạn gửi sang MoMo
+    private String momoTransId;   // transId MoMo trả về
+    private Integer resultCode;    // resultCode MoMo
+    private String message;        // message MoMo
 
     public enum Method {
-        CASH, BANK, MOMO, ZALOPAY
+        MOMO, CASH, BANK
     }
 
     public enum Status {
